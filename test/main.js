@@ -1,6 +1,8 @@
 
 import { expect } from 'chai';
+
 import { selection } from 'd3';
+import { Observable } from 'rx-lite';
 
 import d3Stream from '../src';
 
@@ -14,8 +16,19 @@ describe('d3-stream', () => {
     const div = document.createElement('div');
     const s = d3Stream(div);
 
-    it('d3 element', () => {
-      expect(s).have.property('d3').and.instanceof(selection);
-    });
+    it('d3 element', () =>
+      expect(s).have.property('d3').and.instanceof(selection)
+    );
+
+    it('stream', () =>
+      expect(s).have.property('stream').and.instanceof(Observable)
+    );
+
+    it('stream should return d3 selection', (done) =>
+      s.stream.subscribe((d3Selector) => {
+        expect(d3Selector).to.be.instanceof(selection);
+        done();
+      })
+    );
   });
 });
