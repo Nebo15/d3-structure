@@ -4,12 +4,12 @@ import select from './selection';
 
 export default (selector) => {
   const asD3 = select(selector);
-  const stream = Observable.create(observer =>
+  const d3s = Observable.create(observer =>
     observer.onNext(asD3)
   );
 
   const API = {
-    stream,
+    d3s,
     d3: asD3,
   };
 

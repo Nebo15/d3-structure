@@ -21,11 +21,11 @@ describe('d3-stream', () => {
     );
 
     it('stream', () =>
-      expect(s).have.property('stream').and.instanceof(Observable)
+      expect(s).have.property('d3s').and.instanceof(Observable)
     );
 
     it('stream should return d3 selection', (done) =>
-      s.stream.subscribe((d3Selector) => {
+      s.d3s.subscribe((d3Selector) => {
         expect(d3Selector).to.be.instanceof(selection);
         done();
       })
