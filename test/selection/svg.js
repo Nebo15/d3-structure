@@ -66,7 +66,7 @@ describe('Selection SVG', () => {
   });
 
   describe('events', () => {
-    it('should create area on DOM', (done) => {
+    it('should create defs on DOM', (done) => {
       const defsId = '' + Math.random();
       const s = d3Stream('body');
       const sel = svg(s.d3Subj);
@@ -91,6 +91,48 @@ describe('Selection SVG', () => {
       });
 
       s.dispatch(event);
+    });
+
+    it('should update defs on DOM', (done) => {
+      const defsId = '' + Math.random();
+      const s = d3Stream('body');
+      const sel = svg(s.d3Subj);
+
+      const event = {
+        type: 'selection',
+        tagName: 'defs',
+        id: defsId,
+        node: {},
+        attrs: {
+          someValue: '' + Math.random(),
+        }
+      };
+
+      const updateEvent = {
+        type: 'selection',
+        tagName: 'defs',
+        id: defsId,
+        node: {},
+        attrs: {
+          someValue: '' + Math.random(),
+        },
+      };
+
+      s.dispatch(event);
+
+      sel.catch(done).subscribe((el) => {
+        const defs = document.body.querySelector(
+          `defs[id="${defsId}"]`
+        );
+
+        expect(defs).to.be.not.null;
+        expect(
+          defs.getAttribute('someValue')
+        ).to.be.equal(updateEvent.attrs.someValue);
+
+        done();
+      });
+      s.dispatch(updateEvent);
     });
   });
 });

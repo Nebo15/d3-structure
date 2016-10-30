@@ -33,12 +33,38 @@ const appendNode = ({ e: {
   return Observable.create(o => o.next(withAttrs))
 };
 
+const updateNode = ({ e: {
+  id,
+  tagName,
+  selector = '',
+  attrs = {},
+  node,
+}, svg }) => {
+  const updatedNode = Object.keys(node).reduce((a, k) =>
+    a[k](node[k])
+  , svg.select(`
+    ${selector} ${tagName}${id ? `[id="${id}"]` : null}
+  `));
+
+  const withAttrs = Object.keys(attrs).reduce((a, k) =>
+    a.attr(k, attrs[k])
+  , updatedNode);
+
+  return Observable.create(o => o.next(withAttrs));
+};
+
 const createBranch = (ev) => Observable.if(
   () => !!ev.e.node && !hasNode(ev),
   Observable.create(o => o.next(ev)).flatMap(appendNode),
   Observable.create(o => o.next(ev)),
+);
+
+const updateBranch = (ev) => Observable.if(
+  () => !!ev.e.node && hasNode(ev),
+  Observable.create(o => o.next(ev)).flatMap(updateNode),
+  Observable.create(o => o.next(ev)).flatMap(createBranch),
 );;
 
 export default (s) => s
   .filter(selectionFilter)
-  .flatMap(createBranch)
+  .flatMap(updateBranch)
