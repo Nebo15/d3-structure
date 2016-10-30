@@ -31,16 +31,11 @@ const updateArea = ({ e: { area, id }, container }) => {
 const createBranch = (ev) => Observable.if(
   () => !!ev.e.area && !hasStream(ev),
   Observable.create(o => o.next(ev)).flatMap(createArea),
-  Observable.create(o => o.next(ev)),
+  Observable.of(ev),
 );
 
-const modifyBranch = (ev) => Observable.if(
+export default (ev) => Observable.if(
   () => !!ev.e.area && hasStream(ev),
   Observable.create(o => o.next(ev)).flatMap(updateArea),
   createBranch(ev),
 );
-
-export default s => s
-  .filter(shapeFilter)
-  .filter(areaFilter)
-  .flatMap(modifyBranch)

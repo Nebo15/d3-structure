@@ -1,5 +1,5 @@
 
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import {
   selection as selectionFilter,
@@ -9,10 +9,9 @@ const hasNode = ({ e: {
   id = '',
   tagName,
   selector = '',
-}, svg }) =>
-  !!svg.select(`
-    ${selector} ${tagName}${id ? `[id="${id}"]` : null}
-  `).size()
+}, svg }) => !!svg.select(`
+  ${selector} ${tagName}${id ? `[id="${id}"]` : null}
+`).size()
 
 const appendNode = ({ e: {
   id,
@@ -59,12 +58,9 @@ const createBranch = (ev) => Observable.if(
   Observable.create(o => o.next(ev)),
 );
 
-const updateBranch = (ev) => Observable.if(
+
+export default (ev) => Observable.if(
   () => !!ev.e.node && hasNode(ev),
   Observable.create(o => o.next(ev)).flatMap(updateNode),
   Observable.create(o => o.next(ev)).flatMap(createBranch),
-);;
-
-export default (s) => s
-  .filter(selectionFilter)
-  .flatMap(updateBranch)
+);

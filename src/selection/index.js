@@ -1,7 +1,10 @@
 
-import { Subject } from 'rxjs';
+import { Observable } from 'rxjs';
+
+import {
+  selection as selectionFilter,
+} from '../filters';
 
 import svg from './svg';
 
-export default (new Subject())
-  .flatMap(svg);
+export default (ev) => Observable.of(ev).flatMap(svg);

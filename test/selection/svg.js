@@ -12,64 +12,12 @@ describe('Selection SVG', () => {
 
   it('signature', () => {
     expect(svg).to.be.a('function');
-    expect(svg.length).to.be.equal(1);
-  });
-
-  describe('filtering', () => {
-    it('events for create line', (done) => {
-      const s = d3Stream('body');
-      const sel = svg(s.d3Subj);
-
-      const event = {
-        type: 'selection',
-        tagName: 'defs',
-        selector: 'svg',
-      };
-
-      sel.catch(done).subscribe(({ e }) => {
-        expect(e).to.be.eql(event);
-        done();
-      });
-
-      s.dispatch(event);
-    });
-
-    it('other type in event object', (done) => {
-      const s = d3Stream('body');
-      const sel = svg(s.d3Subj);
-
-      const falsyTypeEvent = {
-        type: 'sselection',
-      };
-
-      const falsyShapeEvent = {
-        type: 'sselection',
-        node: 'ddefs',
-        selector: 'svg',
-      };
-
-      const truthyEvent = {
-        type: 'selection',
-        tagName: 'defs',
-        node: {}
-      };
-
-      sel.catch(done).subscribe((node) => {
-        expect(node).to.be.instanceof(selection);
-        done();
-      });
-
-      s.dispatch(falsyTypeEvent);
-      s.dispatch(falsyShapeEvent);
-      s.dispatch(truthyEvent);
-    });
   });
 
   describe('events', () => {
     it('should create defs on DOM', (done) => {
       const defsId = '' + Math.random();
       const s = d3Stream('body');
-      const sel = svg(s.d3Subj);
 
       const event = {
         type: 'selection',
@@ -79,7 +27,7 @@ describe('Selection SVG', () => {
         attrs: {}
       };
 
-      sel.catch(done).subscribe((el) => {
+      s.subscribe((el) => {
         const defs = document.body.querySelector(
           `defs[id="${defsId}"]`
         );
@@ -96,7 +44,6 @@ describe('Selection SVG', () => {
     it('should update defs on DOM', (done) => {
       const defsId = '' + Math.random();
       const s = d3Stream('body');
-      const sel = svg(s.d3Subj);
 
       const event = {
         type: 'selection',
@@ -120,7 +67,7 @@ describe('Selection SVG', () => {
 
       s.dispatch(event);
 
-      sel.catch(done).subscribe((el) => {
+      s.subscribe((el) => {
         const defs = document.body.querySelector(
           `defs[id="${defsId}"]`
         );

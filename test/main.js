@@ -29,11 +29,16 @@ describe('d3-stream', () => {
     );
 
     it('subject', () =>
-      expect(s).have.property('d3Subj').and.instanceof(Subject)
+      expect(s).have.property('subject').and.instanceof(Subject)
     );
 
     it('dispatch', () => {
       expect(s).have.property('dispatch').and.be.a('function');
+      expect(s.dispatch.length).to.be.equal(1);
+    });
+
+    it('subscribe', () => {
+      expect(s).have.property('subscribe').and.be.a('function');
       expect(s.dispatch.length).to.be.equal(1);
     });
 

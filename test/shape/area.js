@@ -11,58 +11,10 @@ describe('Shape Area', () => {
     expect(area.length).to.be.equal(1);
   });
 
-  describe('filtering', () => {
-    it('events for create line', (done) => {
-      const s = d3Stream('body');
-      const a = area(s.d3Subj);
-
-      const event = {
-        type: 'shape',
-        shape: 'area',
-      };
-
-      a.catch(done).subscribe(({ e }) => {
-        expect(e).to.be.eql(event);
-        done();
-      });
-
-      s.dispatch(event);
-    });
-
-    it('other type in event object', (done) => {
-      const s = d3Stream('body');
-      const a = area(s.d3Subj);
-
-      const falsyTypeEvent = {
-        type: 'sshape',
-      };
-
-      const falsyShapeEvent = {
-        type: 'shape',
-        shape: 'aarea',
-      };
-
-      const truthyEvent = {
-        type: 'shape',
-        shape: 'area',
-      };
-
-      a.catch(done).subscribe(({ e }) => {
-        expect(e).to.be.equal(truthyEvent);
-        done();
-      });
-
-      s.dispatch(falsyTypeEvent);
-      s.dispatch(falsyShapeEvent);
-      s.dispatch(truthyEvent);
-    });
-  });
-
   describe('events', () => {
     it('should correct define values', (done) => {
       const areaId = '' + Math.random();
       const s = d3Stream('body');
-      const a = area(s.d3Subj);
 
       const event = {
         type: 'shape',
@@ -77,7 +29,7 @@ describe('Shape Area', () => {
         }
       };
 
-      a.catch(done).subscribe((area) => {
+      s.subscribe((area) => {
         const savedArea = s.container.shapes.areas[areaId];
 
         expect(savedArea.x()()).to.be.equal(event.area.x);
@@ -124,7 +76,7 @@ describe('Shape Area', () => {
 
       s.dispatch(event);
 
-      a.catch(done).subscribe((area) => {
+      s.subscribe((area) => {
         const savedArea = s.container.shapes.areas[areaId];
 
         expect(savedArea.x()()).to.be.equal(updateEvent.area.x);

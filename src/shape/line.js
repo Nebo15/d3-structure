@@ -2,11 +2,6 @@
 import * as d3 from 'd3';
 import { Observable, Subject } from 'rxjs';
 
-import {
-  shape as shapeFilter,
-  line as lineFilter,
-} from '../filters';
-
 const hasStream = ({ e: { id }, container }) =>
   !!container.shapes.lines[id]
 
@@ -34,13 +29,8 @@ const createBranch = (ev) => Observable.if(
   Observable.create(o => o.next(ev)),
 );
 
-const modifyBranch = (ev) => Observable.if(
+export default (ev) => Observable.if(
   () => !!ev.e.line && hasStream(ev),
   Observable.create(o => o.next(ev)).flatMap(updateLine),
   createBranch(ev),
-);
-
-export default s => s
-  .filter(shapeFilter)
-  .filter(lineFilter)
-  .flatMap(modifyBranch)
+)

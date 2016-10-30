@@ -1,68 +1,20 @@
 
 import { expect } from 'chai';
+import { Subject } from 'rxjs';
 import { selection, curveBasis, curveBasisClosed } from 'd3';
 
 import d3Stream from '../../src';
-import line from '../../src/shape/line';
+import line from '../../src/selection/index';
 
 describe('Shape Line', () => {
   it('signature', () => {
     expect(line).to.be.a('function');
-    expect(line.length).to.be.equal(1);
-  });
-
-  describe('filtering', () => {
-    it('events for create line', (done) => {
-      const s = d3Stream('body');
-      const l = line(s.d3Subj);
-
-      const event = {
-        type: 'shape',
-        shape: 'line',
-      };
-
-      l.catch(done).subscribe(({ e }) => {
-        expect(e).to.be.eql(event);
-        done();
-      });
-
-      s.dispatch(event);
-    });
-
-    it('other type in event object', (done) => {
-      const s = d3Stream('body');
-      const l = line(s.d3Subj);
-
-      const falsyTypeEvent = {
-        type: 'sshape',
-      };
-
-      const falsyShapeEvent = {
-        type: 'shape',
-        shape: 'lline',
-      };
-
-      const truthyEvent = {
-        type: 'shape',
-        shape: 'line',
-      };
-
-      l.catch(done).subscribe(({ e }) => {
-        expect(e).to.be.equal(truthyEvent);
-        done();
-      });
-
-      s.dispatch(falsyTypeEvent);
-      s.dispatch(falsyShapeEvent);
-      s.dispatch(truthyEvent);
-    });
   });
 
   describe('events', () => {
     it('should create line', (done) => {
       const lineId = '' + Math.random();
       const s = d3Stream('body');
-      const l = line(s.d3Subj);
 
       const event = {
         type: 'shape',
@@ -77,7 +29,7 @@ describe('Shape Line', () => {
         }
       };
 
-      l.catch(done).subscribe((line) => {
+      s.subscribe((line) => {
         expect(s.container.shapes.lines[lineId]).to.be.eql(line);
         done();
       });
@@ -88,7 +40,6 @@ describe('Shape Line', () => {
     it('should correct define values', (done) => {
       const lineId = '' + Math.random();
       const s = d3Stream('body');
-      const l = line(s.d3Subj);
 
       const event = {
         type: 'shape',
@@ -103,7 +54,7 @@ describe('Shape Line', () => {
         }
       };
 
-      l.catch(done).subscribe((line) => {
+      s.subscribe((line) => {
         const savedLine = s.container.shapes.lines[lineId];
 
         expect(savedLine.x()()).to.be.equal(event.line.x);
@@ -120,7 +71,6 @@ describe('Shape Line', () => {
     it('should correct update values', (done) => {
       const lineId = '' + Math.random();
       const s = d3Stream('body');
-      const l = line(s.d3Subj);
 
       const event = {
         type: 'shape',
@@ -150,7 +100,7 @@ describe('Shape Line', () => {
 
       s.dispatch(event);
 
-      l.catch(done).subscribe((line) => {
+      s.subscribe((line) => {
         const savedLine = s.container.shapes.lines[lineId];
 
         expect(savedLine.x()()).to.be.equal(updateEvent.line.x);

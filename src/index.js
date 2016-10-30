@@ -1,11 +1,18 @@
 
 import { Observable, Subject } from 'rxjs';
 
-import select from './selection';
+import d3Select from './selection';
+
 import shape from './shape';
+import selection from './selection/index';
+
+import {
+  shape as shapeFilter,
+  selection as selectionFilter,
+} from './filters';
 
 export default (selector) => {
-  const asD3 = select(selector);
+  const asD3 = d3Select(selector);
   const container = {
     shapes: {
       lines: {},
@@ -21,17 +28,26 @@ export default (selector) => {
 
   const svg = asD3.append('svg');
 
-  const d3Subj = new Subject();
-
-  d3Subj.flatMap(shape);
+  const subject = new Subject()
+    .flatMap(e => Observable.if(
+      () => shapeFilter(e),
+      Observable.of(e).flatMap(shape),
+      Observable.if(
+        () => selectionFilter(e),
+        Observable.of(e).flatMap(selection),
+      )
+    ));
 
   const API = {
-    d3Subj,
     d3: asD3,
+    subject,
     d3Stream,
     container,
+    subscribe(cb) {
+      return subject.subscribe(cb);
+    },
     dispatch(e) {
-      d3Subj.next({
+      return subject.next({
         e, svg, container,
       });
     },
