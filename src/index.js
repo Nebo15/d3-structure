@@ -19,9 +19,7 @@ export default (selector) => {
     observer.next(asD3)
   );
 
-  const svgStream = d3Stream.map(selection =>
-    selection.append('svg')
-  );
+  const svg = asD3.append('svg');
 
   const d3Subj = new Subject();
 
@@ -34,9 +32,7 @@ export default (selector) => {
     container,
     dispatch(e) {
       d3Subj.next({
-        e,
-        svgStream,
-        container,
+        e, svg, container,
       });
     },
   };
