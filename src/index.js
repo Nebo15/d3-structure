@@ -11,6 +11,7 @@ export default (selector) => {
       lines: {},
       arcs: {},
       pies: {},
+      areas: {},
     },
   };
 
