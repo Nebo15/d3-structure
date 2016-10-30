@@ -25,7 +25,7 @@ export default (selector) => {
 
   const d3Subj = new Subject();
 
-  shape(d3Subj);
+  d3Subj.flatMap(shape);
 
   const API = {
     d3Subj,
