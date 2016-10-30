@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 
 import { selection } from 'd3';
-import { Observable } from 'rx-lite';
+import { Observable } from 'rxjs';
 
 import select, {
   selectWrapper,

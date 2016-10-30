@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 
 import { selection } from 'd3';
-import { Observable } from 'rx-lite';
+import { Observable, Subject } from 'rxjs';
 
 import d3Stream from '../src';
 
@@ -21,11 +21,24 @@ describe('d3-stream', () => {
     );
 
     it('stream', () =>
-      expect(s).have.property('d3s').and.instanceof(Observable)
+      expect(s).have.property('d3Stream').and.instanceof(Observable)
     );
 
+    it('container', () =>
+      expect(s).have.property('container').a('object')
+    );
+
+    it('subject', () =>
+      expect(s).have.property('d3Subj').and.instanceof(Subject)
+    );
+
+    it('dispatch', () => {
+      expect(s).have.property('dispatch').and.be.a('function');
+      expect(s.dispatch.length).to.be.equal(1);
+    });
+
     it('stream should return d3 selection', (done) =>
-      s.d3s.subscribe((d3Selector) => {
+      s.d3Stream.subscribe((d3Selector) => {
         expect(d3Selector).to.be.instanceof(selection);
         done();
       })
