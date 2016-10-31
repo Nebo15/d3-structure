@@ -12,7 +12,7 @@ describe('Shape Area', () => {
   });
 
   describe('events', () => {
-    it('should correct define values', (done) => {
+    it('should correct define values', () => {
       const areaId = '' + Math.random();
       const s = d3Stream('body');
 
@@ -29,21 +29,17 @@ describe('Shape Area', () => {
         }
       };
 
-      s.subscribe((area) => {
-        const savedArea = s.container.shapes.areas[areaId];
-
-        expect(savedArea.x()()).to.be.equal(event.area.x);
-        expect(savedArea.y()()).to.be.equal(event.area.y);
-        expect(savedArea.curve()).to.be.equal(event.area.curve);
-        expect(savedArea.context()).to.be.equal(event.area.context);
-
-        done();
-      });
-
       s.dispatch(event);
+
+      const savedArea = s.container.shapes.areas[areaId];
+
+      expect(savedArea.x()()).to.be.equal(event.area.x);
+      expect(savedArea.y()()).to.be.equal(event.area.y);
+      expect(savedArea.curve()).to.be.equal(event.area.curve);
+      expect(savedArea.context()).to.be.equal(event.area.context);
     });
 
-    it('should correct update values', (done) => {
+    it('should correct update values', () => {
       const areaId = '' + Math.random();
       const s = d3Stream('body');
       const a = area(s.d3Subj);
@@ -75,19 +71,14 @@ describe('Shape Area', () => {
       };
 
       s.dispatch(event);
-
-      s.subscribe((area) => {
-        const savedArea = s.container.shapes.areas[areaId];
-
-        expect(savedArea.x()()).to.be.equal(updateEvent.area.x);
-        expect(savedArea.y()()).to.be.equal(updateEvent.area.y);
-        expect(savedArea.curve()).to.be.equal(updateEvent.area.curve);
-        expect(savedArea.context()).to.be.equal(updateEvent.area.context);
-
-        done();
-      });
-
       s.dispatch(updateEvent);
+
+      const savedArea = s.container.shapes.areas[areaId];
+
+      expect(savedArea.x()()).to.be.equal(updateEvent.area.x);
+      expect(savedArea.y()()).to.be.equal(updateEvent.area.y);
+      expect(savedArea.curve()).to.be.equal(updateEvent.area.curve);
+      expect(savedArea.context()).to.be.equal(updateEvent.area.context);
     });
   });
 });

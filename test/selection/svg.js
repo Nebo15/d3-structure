@@ -27,8 +27,6 @@ describe('Selection SVG', () => {
         attrs: {}
       };
 
-      s.subscribe();
-
       s.dispatch(event);
 
       const defs = document.body.querySelector(
@@ -62,8 +60,6 @@ describe('Selection SVG', () => {
           someValue: '' + Math.random(),
         },
       };
-
-      s.subscribe();
 
       s.dispatch(event);
 

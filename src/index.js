@@ -38,6 +38,8 @@ export default (selector) => {
       )
     ));
 
+  subject.subscribe();
+
   const API = {
     d3: asD3,
     subject,

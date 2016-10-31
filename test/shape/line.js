@@ -12,32 +12,7 @@ describe('Shape Line', () => {
   });
 
   describe('events', () => {
-    it('should create line', (done) => {
-      const lineId = '' + Math.random();
-      const s = d3Stream('body');
-
-      const event = {
-        type: 'shape',
-        shape: 'line',
-        id: lineId,
-        line: {
-          x: 0,
-          y: 0,
-          defined: true,
-          curve: (d) => d,
-          context: true,
-        }
-      };
-
-      s.subscribe((line) => {
-        expect(s.container.shapes.lines[lineId]).to.be.eql(line);
-        done();
-      });
-
-      s.dispatch(event);
-    });
-
-    it('should correct define values', (done) => {
+    it('should correct define values', () => {
       const lineId = '' + Math.random();
       const s = d3Stream('body');
 
@@ -54,21 +29,17 @@ describe('Shape Line', () => {
         }
       };
 
-      s.subscribe((line) => {
-        const savedLine = s.container.shapes.lines[lineId];
-
-        expect(savedLine.x()()).to.be.equal(event.line.x);
-        expect(savedLine.y()()).to.be.equal(event.line.y);
-        expect(savedLine.curve()).to.be.equal(event.line.curve);
-        expect(savedLine.context()).to.be.equal(event.line.context);
-
-        done();
-      });
-
       s.dispatch(event);
+
+      const savedLine = s.container.shapes.lines[lineId];
+
+      expect(savedLine.x()()).to.be.equal(event.line.x);
+      expect(savedLine.y()()).to.be.equal(event.line.y);
+      expect(savedLine.curve()).to.be.equal(event.line.curve);
+      expect(savedLine.context()).to.be.equal(event.line.context);
     });
 
-    it('should correct update values', (done) => {
+    it('should correct update values', () => {
       const lineId = '' + Math.random();
       const s = d3Stream('body');
 
@@ -99,19 +70,14 @@ describe('Shape Line', () => {
       };
 
       s.dispatch(event);
-
-      s.subscribe((line) => {
-        const savedLine = s.container.shapes.lines[lineId];
-
-        expect(savedLine.x()()).to.be.equal(updateEvent.line.x);
-        expect(savedLine.y()()).to.be.equal(updateEvent.line.y);
-        expect(savedLine.curve()).to.be.equal(updateEvent.line.curve);
-        expect(savedLine.context()).to.be.equal(updateEvent.line.context);
-
-        done();
-      });
-
       s.dispatch(updateEvent);
+
+      const savedLine = s.container.shapes.lines[lineId];
+
+      expect(savedLine.x()()).to.be.equal(updateEvent.line.x);
+      expect(savedLine.y()()).to.be.equal(updateEvent.line.y);
+      expect(savedLine.curve()).to.be.equal(updateEvent.line.curve);
+      expect(savedLine.context()).to.be.equal(updateEvent.line.context);
     });
   });
 });
