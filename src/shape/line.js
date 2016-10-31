@@ -16,21 +16,21 @@ const createLine = ({ e: { line, id }, container }) => {
 };
 
 const updateLine = ({ e: { line, id }, container }) => {
-  return Observable.create(o => o.next(
+  return Observable.of(
     Object.keys(line).reduce((l, k) =>
       l[k](line[k])
     , container.shapes.lines[id])
-  ));
+  );
 };
 
 const createBranch = (ev) => Observable.if(
   () => !!ev.e.line && !hasStream(ev),
-  Observable.create(o => o.next(ev)).flatMap(createLine),
-  Observable.create(o => o.next(ev)),
+  Observable.of(ev).flatMap(createLine),
+  Observable.of(ev),
 );
 
 export default (ev) => Observable.if(
   () => !!ev.e.line && hasStream(ev),
-  Observable.create(o => o.next(ev)).flatMap(updateLine),
+  Observable.of(ev).flatMap(updateLine),
   createBranch(ev),
 )
