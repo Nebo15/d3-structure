@@ -1,8 +1,7 @@
 
 import { expect } from 'chai';
 
-import { selection } from 'd3';
-import { Observable } from 'rxjs';
+import { selection } from 'd3-selection';
 
 import select, {
   selectWrapper,
@@ -53,13 +52,4 @@ describe('Selection', () => {
       expect(sel).to.be.instanceof(selection);
     });
   });
-
-  // it('stream should return dom element', () => {
-  //   const div = document.createElement('div');
-  //   const divStream = from(div);
-  //   // const bodyStream = selectWrapper(s)(body);
-  //
-  //   expect(selectWrapper(div)).to.be.equal(div);
-  //   // expect(s('body')()).to.be.equal(document.body);
-  // });
 });

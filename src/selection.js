@@ -1,5 +1,5 @@
 
-import { select } from 'd3';
+import { select } from 'd3-selection';
 
 export const selectWrapper = selector =>
   selector instanceof window.HTMLElement ?

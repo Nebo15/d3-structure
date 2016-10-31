@@ -1,6 +1,6 @@
 
 import { expect } from 'chai';
-import { selection } from 'd3';
+import { selection } from 'd3-selection';
 
 import d3Stream from '../../src';
 import svg from '../../src/selection/svg';

@@ -1,34 +1,19 @@
 
-import * as d3 from 'd3';
-import { Observable, Subject } from 'rxjs';
+import { line as d3Line } from 'd3-shape';
 
-const hasStream = ({ e: { id }, container }) =>
-  !!container.shapes.lines[id]
+import cond from 'ramda/src/cond';
 
-const createLine = ({ e: { line, id }, container }) => {
-  const newLine = Object.keys(line).reduce((l, k) =>
-    l[k](line[k])
-  , d3.line());
+const hasLine = ({ e: { id }, container }) => !!container.shapes.lines[id]
 
-  container.shapes.lines[id] = newLine;
+const createLine = ({ e: { line, id }, container }) =>
+  container.shapes.lines[id] = Object.keys(line).reduce((l, k) => l[k](line[k]), d3Line())
 
-  return Observable.of(newLine);
-};
+const updateLine = ({ e: { line, id }, container }) =>
+  Object.keys(line).reduce(
+    (l, k) => l[k](line[k]), container.shapes.lines[id]
+  );
 
-const updateLine = ({ e: { line, id }, container }) => Observable.of(
-  Object.keys(line).reduce((l, k) =>
-    l[k](line[k])
-  , container.shapes.lines[id])
-);
-
-const createBranch = (ev) => Observable.if(
-  () => !!ev.e.line && !hasStream(ev),
-  Observable.of(ev).flatMap(createLine),
-  Observable.of(ev),
-);
-
-export default (ev) => Observable.if(
-  () => !!ev.e.line && hasStream(ev),
-  Observable.of(ev).flatMap(updateLine),
-  createBranch(ev),
-)
+export default cond([
+  [(ev) => !!ev.e.line && hasLine(ev), updateLine],
+  [(ev) => !!ev.e.line && !hasLine(ev), createLine],
+]);

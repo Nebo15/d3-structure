@@ -1,6 +1,7 @@
 
 import { expect } from 'chai';
-import { selection, curveBasis, curveBasisClosed } from 'd3';
+import { selection } from 'd3-selection';
+import { curveBasis, curveBasisClosed } from 'd3-shape';
 
 import d3Stream from '../../src';
 import area from '../../src/shape/area';
@@ -42,7 +43,6 @@ describe('Shape Area', () => {
     it('should correct update values', () => {
       const areaId = '' + Math.random();
       const s = d3Stream('body');
-      const a = area(s.d3Subj);
 
       const event = {
         type: 'shape',

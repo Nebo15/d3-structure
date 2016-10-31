@@ -1,7 +1,7 @@
 
 import { expect } from 'chai';
-import { Subject } from 'rxjs';
-import { selection, curveBasis, curveBasisClosed } from 'd3';
+import { selection } from 'd3-selection';
+import { curveBasis, curveBasisClosed } from 'd3-shape';
 
 import d3Stream from '../../src';
 import line from '../../src/selection/index';

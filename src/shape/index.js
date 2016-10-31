@@ -1,5 +1,6 @@
 
-import { Observable } from 'rxjs';
+import cond from 'ramda/src/cond';
+import T from 'ramda/src/T';
 
 import {
   line as lineFilter,
@@ -9,15 +10,8 @@ import {
 import line from './line';
 import area from './area';
 
-export default (ev) => Observable.of(ev)
-  .flatMap((e) =>
-    Observable.if(
-      () => lineFilter(e),
-      Observable.of(e).flatMap(line),
-      Observable.if(
-        () => areaFilter(e),
-        Observable.of(e).flatMap(area),
-        Observable.of(e),
-      )
-    )
-  );
+export default cond([
+  [lineFilter, line],
+  [areaFilter, area],
+  [T, (ev) => ev]
+]);

@@ -1,5 +1,5 @@
 
-import { Observable, Subject } from 'rxjs';
+import cond from 'ramda/src/cond';
 
 import d3Select from './selection';
 
@@ -13,6 +13,8 @@ import {
 
 export default (selector) => {
   const asD3 = d3Select(selector);
+  const svg = asD3.append('svg');
+
   const container = {
     shapes: {
       lines: {},
@@ -20,38 +22,24 @@ export default (selector) => {
       pies: {},
       areas: {},
     },
+    axises: {},
   };
 
-  const d3Stream = Observable.create(observer =>
-    observer.next(asD3)
-  );
-
-  const svg = asD3.append('svg');
-
-  const subject = new Subject()
-    .flatMap(e => Observable.if(
-      () => shapeFilter(e),
-      Observable.of(e).flatMap(shape),
-      Observable.if(
-        () => selectionFilter(e),
-        Observable.of(e).flatMap(selection),
-      )
-    ));
-
-  subject.subscribe();
+  const subject = cond([
+    [(e) => shapeFilter(e), shape],
+    [(e) => selectionFilter(e), selection]
+  ]);
 
   const API = {
     d3: asD3,
-    subject,
-    d3Stream,
     container,
-    subscribe(cb) {
-      return subject.subscribe(cb);
-    },
     dispatch(e) {
-      return subject.next({
-        e, svg, container,
+      return subject({
+        e, svg, container
       });
+      // return subject.next({
+      //   e, svg, container,
+      // });
     },
   };
 

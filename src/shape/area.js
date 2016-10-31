@@ -1,6 +1,6 @@
 
-import * as d3 from 'd3';
-import { Observable, Subject } from 'rxjs';
+import { area as d3Area } from 'd3-shape';
+import cond from 'ramda/src/cond';
 
 import {
   shape as shapeFilter,
@@ -10,32 +10,17 @@ import {
 const hasStream = ({ e: { id }, container }) =>
   !!container.shapes.areas[id]
 
-const createArea = ({ e: { area, id }, container }) => {
-  const newArea = Object.keys(area).reduce((a, k) =>
+const createArea = ({ e: { area, id }, container }) =>
+  container.shapes.areas[id] = Object.keys(area).reduce((a, k) =>
     a[k](area[k])
-  , d3.area());
+  , d3Area());
 
-  container.shapes.areas[id] = newArea;
+const updateArea = ({ e: { area, id }, container }) =>
+  Object.keys(area).reduce((a, k) =>
+    a[k](area[k])
+  , container.shapes.areas[id])
 
-  return Observable.create(o => o.next(newArea));
-};
-
-const updateArea = ({ e: { area, id }, container }) => {
-  return Observable.of(
-    Object.keys(area).reduce((a, k) =>
-      a[k](area[k])
-    , container.shapes.areas[id])
-  );
-};
-
-const createBranch = (ev) => Observable.if(
-  () => !!ev.e.area && !hasStream(ev),
-  Observable.of(ev).flatMap(createArea),
-  Observable.of(ev),
-);
-
-export default (ev) => Observable.if(
-  () => !!ev.e.area && hasStream(ev),
-  Observable.of(ev).flatMap(updateArea),
-  createBranch(ev),
-);
+export default cond([
+  [(ev) => !!ev.e.area && hasStream(ev), updateArea],
+  [(ev) => !!ev.e.area && !hasStream(ev), createArea],
+]);
