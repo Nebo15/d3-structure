@@ -29,7 +29,7 @@ const appendNode = ({ e: {
     a.attr(k, attrs[k])
   , appended).attr('id', id);
 
-  return Observable.create(o => o.next(withAttrs))
+  return Observable.of(withAttrs)
 };
 
 const updateNode = ({ e: {
@@ -49,18 +49,17 @@ const updateNode = ({ e: {
     a.attr(k, attrs[k])
   , updatedNode);
 
-  return Observable.create(o => o.next(withAttrs));
+  return Observable.of(withAttrs);
 };
 
 const createBranch = (ev) => Observable.if(
   () => !!ev.e.node && !hasNode(ev),
-  Observable.create(o => o.next(ev)).flatMap(appendNode),
-  Observable.create(o => o.next(ev)),
+  Observable.of(ev).flatMap(appendNode),
+  Observable.of(ev),
 );
-
 
 export default (ev) => Observable.if(
   () => !!ev.e.node && hasNode(ev),
-  Observable.create(o => o.next(ev)).flatMap(updateNode),
-  Observable.create(o => o.next(ev)).flatMap(createBranch),
+  Observable.of(ev).flatMap(updateNode),
+  Observable.of(ev).flatMap(createBranch),
 );

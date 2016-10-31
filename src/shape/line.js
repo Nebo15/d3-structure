@@ -12,16 +12,14 @@ const createLine = ({ e: { line, id }, container }) => {
 
   container.shapes.lines[id] = newLine;
 
-  return Observable.create(o => o.next(newLine));
+  return Observable.of(newLine);
 };
 
-const updateLine = ({ e: { line, id }, container }) => {
-  return Observable.of(
-    Object.keys(line).reduce((l, k) =>
-      l[k](line[k])
-    , container.shapes.lines[id])
-  );
-};
+const updateLine = ({ e: { line, id }, container }) => Observable.of(
+  Object.keys(line).reduce((l, k) =>
+    l[k](line[k])
+  , container.shapes.lines[id])
+);
 
 const createBranch = (ev) => Observable.if(
   () => !!ev.e.line && !hasStream(ev),

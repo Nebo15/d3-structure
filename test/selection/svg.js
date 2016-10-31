@@ -15,7 +15,7 @@ describe('Selection SVG', () => {
   });
 
   describe('events', () => {
-    it('should create defs on DOM', (done) => {
+    it('should create defs on DOM', () => {
       const defsId = '' + Math.random();
       const s = d3Stream('body');
 
@@ -27,21 +27,19 @@ describe('Selection SVG', () => {
         attrs: {}
       };
 
-      s.subscribe((el) => {
-        const defs = document.body.querySelector(
-          `defs[id="${defsId}"]`
-        );
-
-        expect(defs).to.be.not.null;
-        expect(defs.getAttribute('id')).to.be.equal(defsId);
-
-        done();
-      });
+      s.subscribe();
 
       s.dispatch(event);
+
+      const defs = document.body.querySelector(
+        `defs[id="${defsId}"]`
+      );
+
+      expect(defs).to.be.not.null;
+      expect(defs.getAttribute('id')).to.be.equal(defsId);
     });
 
-    it('should update defs on DOM', (done) => {
+    it('should update defs on DOM', () => {
       const defsId = '' + Math.random();
       const s = d3Stream('body');
 
@@ -65,21 +63,24 @@ describe('Selection SVG', () => {
         },
       };
 
+      s.subscribe();
+
       s.dispatch(event);
 
-      s.subscribe((el) => {
-        const defs = document.body.querySelector(
-          `defs[id="${defsId}"]`
-        );
+      const defs = document.body.querySelector(
+        `defs[id="${defsId}"]`
+      );
 
-        expect(defs).to.be.not.null;
-        expect(
-          defs.getAttribute('someValue')
-        ).to.be.equal(updateEvent.attrs.someValue);
+      expect(defs).to.be.not.null;
+      expect(
+        defs.getAttribute('someValue')
+      ).to.be.equal(event.attrs.someValue);
 
-        done();
-      });
       s.dispatch(updateEvent);
+
+      expect(
+        defs.getAttribute('someValue')
+      ).to.be.equal(updateEvent.attrs.someValue);
     });
   });
 });
