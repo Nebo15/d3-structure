@@ -5,10 +5,14 @@ import d3Select from './selection';
 
 import shape from './shape';
 import selection from './selection/index';
+import axis from './axis';
+import scale from './scale';
 
 import {
   shape as shapeFilter,
   selection as selectionFilter,
+  axis as axisFilter,
+  scale as scaleFilter,
 } from './filters';
 
 export default (selector) => {
@@ -23,11 +27,14 @@ export default (selector) => {
       areas: {},
     },
     axises: {},
+    scales: {},
   };
 
   const subject = cond([
     [(e) => shapeFilter(e), shape],
-    [(e) => selectionFilter(e), selection]
+    [(e) => selectionFilter(e), selection],
+    [(e) => scaleFilter(e), scale],
+    [(e) => axisFilter(e), axis],
   ]);
 
   const API = {
@@ -37,9 +44,6 @@ export default (selector) => {
       return subject({
         e, svg, container
       });
-      // return subject.next({
-      //   e, svg, container,
-      // });
     },
   };
 
