@@ -12,6 +12,31 @@ describe('Shape Line', () => {
   });
 
   describe('events', () => {
+    it('hooks', () => {
+      const lineId = '' + Math.random();
+      const s = d3Stream('body');
+
+      const event = {
+        type: 'shape',
+        shape: 'line',
+        id: lineId,
+        line: {
+          x: {
+            value: Math.random(),
+            hooks: [
+              (a) => a * 2
+            ]
+          },
+        }
+      };
+
+      s.dispatch(event);
+
+      const savedLine = s.container.shapes.lines[lineId];
+
+      expect(savedLine.x()()).to.be.equal(event.line.x.hooks[0](event.line.x.value));
+    });
+
     it('should correct define values', () => {
       const lineId = '' + Math.random();
       const s = d3Stream('body');

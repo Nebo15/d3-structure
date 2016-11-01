@@ -13,6 +13,31 @@ describe('Shape Area', () => {
   });
 
   describe('events', () => {
+    it('hooks', () => {
+      const areaId = '' + Math.random();
+      const s = d3Stream('body');
+
+      const event = {
+        type: 'shape',
+        shape: 'area',
+        id: areaId,
+        area: {
+          x: {
+            value: Math.random(),
+            hooks: [
+              (a) => a * 2
+            ]
+          },
+        }
+      };
+
+      s.dispatch(event);
+
+      const savedArea = s.container.shapes.areas[areaId];
+
+      expect(savedArea.x()()).to.be.equal(event.area.x.hooks[0](event.area.x.value));
+    });
+
     it('should correct define values', () => {
       const areaId = '' + Math.random();
       const s = d3Stream('body');
