@@ -1,5 +1,6 @@
 
 import cond from 'ramda/src/cond';
+import * as d3 from 'd3-interpolate';
 
 import {
   selection as selectionFilter,
@@ -19,11 +20,14 @@ const appendNode = ({ e: {
   selector = '',
   attrs = {},
   node,
-}, svg }) => {
+  transitionId = ''
+}, svg, container }) => {
   const parentNode = selector ? svg.select(selector) : svg;
   const appended = Object.keys(node).reduce((a, k) =>
     a[k](node[k])
   , parentNode.append(tagName));
+
+  appended.transition(container.transitions[transitionId]);
 
   return Object.keys(attrs).reduce((a, k) =>
     a.attr(k, attrs[k])
@@ -35,17 +39,20 @@ const updateNode = ({ e: {
   tagName,
   selector = '',
   attrs = {},
-  node,
-}, svg }) => {
-  const updatedNode = Object.keys(node).reduce((a, k) =>
-    a[k](node[k])
-  , svg.select(`
+  node = {},
+  transitionId
+}, svg, container }) => {
+  const selection = svg.select(`
     ${selector} ${tagName}${id ? `[id="${id}"]` : null}
-  `));
+  `);
+
+  const updatedNode = Object.keys(node).reduce((a, k) => {
+    return a[k](node[k]);
+  }, selection);
 
   return Object.keys(attrs).reduce((a, k) =>
     a.attr(k, attrs[k])
-  , updatedNode);
+  , transitionId ? updatedNode.transition(container.transitions[transitionId]) : updatedNode);
 };
 
 export default cond([

@@ -5,6 +5,9 @@
   <title>Examples | d3-stream</title>
   <link rel="stylesheet" href="./foundation.css" media="screen" title="no title">
   <style>
+    .transitionArea svg #transitionArea {
+      fill: blue;
+    }
     /*.docs-code {
       display: none;
     }*/
@@ -45,8 +48,19 @@
               const a = 2;
             ```
           </div> -->
-          <button class="dynamicUpdateButton">Update</button>
+          <button class="button dynamicUpdateButton">Update</button>
           <div class="btn btn-primary dynamicArea"></div>
+        </div>
+
+        <div class="small-12 columns">
+          <h3>Transition Area chart</h3>
+          <!-- <div class="docs-code">
+            ```
+              const a = 2;
+            ```
+          </div> -->
+          <button class="button transitionUpdateButton">Update</button>
+          <div class="btn btn-primary transitionArea"></div>
         </div>
       </div>
     </div>
