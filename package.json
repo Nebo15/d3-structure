@@ -1,6 +1,6 @@
 {
   "name": "d3-structure",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "babel-preset-stage-0": "^6.16.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.14",
+    "d3-array": "^1.0.1",
     "d3-time-format": "^2.0.2",
     "d3-xhr": "^0.1.5",
     "istanbul": "^1.0.0-alpha",

@@ -35,7 +35,7 @@ describe('Scale Update', () => {
 
       expect(
         s.container.scales[typeScaleEvent.id].domain()
-      ).not.be.eql(expectedScale.domain());
+      ).be.eql(expectedScale.domain());
     });
   });
 });
