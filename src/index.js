@@ -7,12 +7,14 @@ import shape from './shape';
 import selection from './selection/index';
 import axis from './axis';
 import scale from './scale';
+import transition from './transition';
 
 import {
   shape as shapeFilter,
   selection as selectionFilter,
   axis as axisFilter,
   scale as scaleFilter,
+  transition as transitionFilter,
 } from './filters';
 
 export default (selector) => {
@@ -28,6 +30,7 @@ export default (selector) => {
     },
     axises: {},
     scales: {},
+    transitions: {},
   };
 
   const subject = cond([
@@ -35,6 +38,7 @@ export default (selector) => {
     [(e) => selectionFilter(e), selection],
     [(e) => scaleFilter(e), scale],
     [(e) => axisFilter(e), axis],
+    [(e) => transitionFilter(e), transition],
   ]);
 
   const API = {

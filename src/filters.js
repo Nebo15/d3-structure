@@ -8,3 +8,5 @@ export const selection = ({ e }) => e.type === 'selection';
 export const axis = ({ e }) => e.type === 'axis';
 
 export const scale = ({ e }) => e.type === 'scale';
+
+export const transition = ({ e }) => e.type === 'transition';
