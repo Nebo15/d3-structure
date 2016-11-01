@@ -1,14 +1,15 @@
 {
   "name": "d3-structure",
-  "version": "0.13.2",
+  "version": "0.13.3",
   "description": "",
-  "main": "src/index.js",
+  "main": "dist/d3-structure.js",
   "scripts": {
     "test": "mocha",
     "test:dev": "npm run test -- --watch",
     "precoveralls": "istanbul cover _mocha",
     "coveralls": "coveralls < coverage/lcov.info",
-    "examples": "webpack --module-bind 'js=babel' examples/examples.js examples/dist.js"
+    "examples": "webpack --module-bind 'js=babel' examples/examples.js examples/dist.js",
+    "prepublish": "webpack --optimize-minimize --module-bind 'js=babel' src/index.js dist/d3-structure.js"
   },
   "author": "Rastopyr <rastopyr@gmail.com> (http://rastopyr.github.io/)",
   "license": "MIT",

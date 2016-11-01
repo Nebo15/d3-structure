@@ -1,6 +1,5 @@
 
 import cond from 'ramda/src/cond';
-import * as d3 from 'd3-interpolate';
 
 import {
   selection as selectionFilter,
