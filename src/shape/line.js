@@ -9,12 +9,9 @@ const createLine = ({ e: { line, id }, container }) =>
   container.shapes.lines[id] = Object.keys(line).reduce(
     (l, k) => {
       if (line[k].hooks) {
-        return l[k](
-          line[k].hooks.reduce(
-            (v, h) => 'function' === typeof h ? h(v) : path(h, container)(v),
-            line[k].value
-          )
-        );
+        return l[k]((val) => line[k].hooks.reduce((v, hook) =>
+          'function' === typeof hook ? hook(val) : path(hook, container)(val)
+        , val));
       }
 
       return l[k](line[k]);
@@ -26,12 +23,9 @@ const updateLine = ({ e: { line, id }, container }) =>
   Object.keys(line).reduce(
     (l, k) => {
       if (line[k].hooks) {
-        return l[k](
-          line[k].hooks.reduce(
-            (v, h) => 'function' === typeof h ? h(v) : path(h, container)(v),
-            line[k].value
-          )
-        );
+        return l[k]((val) => line[k].hooks.reduce((v, hook) =>
+          'function' === typeof hook ? hook(val) : path(hook, container)(val)
+        , val));
       }
 
       return l[k](line[k]);

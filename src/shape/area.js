@@ -14,12 +14,9 @@ const hasStream = ({ e: { id }, container }) =>
 const createArea = ({ e: { area, id }, container }) =>
   container.shapes.areas[id] = Object.keys(area).reduce((a, k) => {
     if (area[k].hooks) {
-      return a[k](
-        area[k].hooks.reduce(
-          (v, h) => 'function' === typeof h ? h(v) : path(h, container)(v),
-          area[k].value
-        )
-      );
+      return a[k]((val) => area[k].hooks.reduce((v, hook) =>
+        'function' === typeof hook ? hook(val) : path(hook, container)(val)
+      , val));
     }
 
     return a[k](area[k]);
@@ -28,12 +25,9 @@ const createArea = ({ e: { area, id }, container }) =>
 const updateArea = ({ e: { area, id }, container }) =>
   Object.keys(area).reduce((a, k) => {
     if (area[k].hooks) {
-      return a[k](
-        area[k].hooks.reduce(
-          (v, h) => 'function' === typeof h ? h(v) : path(h, container)(v),
-          area[k].value
-        )
-      );
+      return l[k]((val) => line[k].hooks.reduce((v, hook) =>
+        'function' === typeof hook ? hook(val) : path(hook, container)(val)
+      , val));
     }
 
     return a[k](area[k]);

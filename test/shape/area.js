@@ -35,7 +35,9 @@ describe('Shape Area', () => {
 
       const savedArea = s.container.shapes.areas[areaId];
 
-      expect(savedArea.x()()).to.be.equal(event.area.x.hooks[0](event.area.x.value));
+      expect(
+        savedArea.x()(event.area.x.value)
+      ).to.be.equal(event.area.x.hooks[0](event.area.x.value));
     });
 
     it('should correct define values', () => {

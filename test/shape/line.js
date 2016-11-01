@@ -34,7 +34,7 @@ describe('Shape Line', () => {
 
       const savedLine = s.container.shapes.lines[lineId];
 
-      expect(savedLine.x()()).to.be.equal(event.line.x.hooks[0](event.line.x.value));
+      expect(savedLine.x()(event.line.x.value)).to.be.equal(event.line.x.hooks[0](event.line.x.value));
     });
 
     it('should correct define values', () => {
