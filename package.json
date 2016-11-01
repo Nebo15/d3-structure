@@ -1,8 +1,8 @@
 {
   "name": "d3-structure",
-  "version": "0.13.4",
+  "version": "0.13.5",
   "description": "",
-  "main": "dist/d3-structure.js",
+  "main": "dist/index",
   "scripts": {
     "test": "mocha",
     "test:dev": "npm run test -- --watch",
