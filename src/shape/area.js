@@ -9,7 +9,7 @@ import {
   area as areaFilter,
 } from '../filters';
 
-import { shapeReducer } from './utils';
+import { shapeReducer } from '../utils';
 
 const hasStream = ({ e: { id }, container }) =>
   !!container.shapes.areas[id]
