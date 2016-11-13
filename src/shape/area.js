@@ -12,13 +12,17 @@ import {
 import { shapeReducer } from '../utils';
 
 const hasStream = ({ e: { id }, container }) =>
-  !!container.shapes.areas[id]
+  !!container.shapes.areas[id];
 
 const createArea = ({ e: { area, id }, container }) =>
-  container.shapes.areas[id] = shapeReducer(area, d3Area(), { container })
+  container.shapes.areas[id] = shapeReducer(d3Area(), Object.assign({}, {
+    container,
+  }, area));
 
 const updateArea = ({ e: { area, id }, container }) =>
-  shapeReducer(area, container.shapes.areas[id], { container })
+  shapeReducer(container.shapes.areas[id], Object.assign({}, {
+    container,
+  }, area));
 
 export default cond([
   [(ev) => !!ev.e.area && hasStream(ev), updateArea],

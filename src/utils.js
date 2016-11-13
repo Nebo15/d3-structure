@@ -7,7 +7,7 @@ const hookReducer = (val, hooks, { container }) =>
     'function' === typeof hook ? hook(val) : path(hook, container)(val)
   , val);
 
-export const shapeReducer = (options, shape, { container }) =>
+export const shapeReducer = (shape, { container, ...options }) =>
   Object.keys(options).reduce((reducedShape, optionName) => {
     if (options[optionName].hooks) {
       return reducedShape[optionName]((val) =>
