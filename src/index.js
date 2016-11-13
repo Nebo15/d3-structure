@@ -17,7 +17,7 @@ import {
   transition as transitionFilter,
 } from './filters';
 
-export default (selector) => {
+export default (selector, options) => {
   const asD3 = d3Select(selector);
   const svg = asD3.append('svg');
 
@@ -49,6 +49,17 @@ export default (selector) => {
         e, svg, container
       });
     },
+
+    scale(name, options) {
+      return subject({
+        e: {
+          id: name,
+          type: 'scale',
+          scaleType: options.type,
+          scale: options
+        }, svg, container
+      });
+    }
   };
 
   return API;

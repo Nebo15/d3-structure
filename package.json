@@ -1,6 +1,6 @@
 {
   "name": "d3-structure",
-  "version": "0.13.5",
+  "version": "0.14.1",
   "description": "",
   "main": "dist/index",
   "scripts": {

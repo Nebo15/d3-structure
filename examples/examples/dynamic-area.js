@@ -129,28 +129,4 @@ function update(data) {
       d: areas.mainArea,
     },
   });
-
-  dynamicArea.dispatch({
-    type: 'selection',
-    id: 'xAxis',
-    tagName: 'g',
-    node: {
-      call: axises.xAxis,
-    },
-    attrs: {
-      transform:' translate(' + margin.left + ',' + (height + margin.top) + ')',
-    }
-  });
-
-  dynamicArea.dispatch({
-    type: 'selection',
-    id: 'yAxis',
-    tagName: 'g',
-    node: {
-      call: axises.yAxis,
-    },
-    attrs: {
-      transform:' translate(' + margin.left + ', ' + margin.top + ')',
-    }
-  });
 }
