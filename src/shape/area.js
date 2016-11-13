@@ -1,5 +1,6 @@
 
 import { area as d3Area } from 'd3-shape';
+
 import cond from 'ramda/src/cond';
 import path from 'ramda/src/path';
 
@@ -8,30 +9,16 @@ import {
   area as areaFilter,
 } from '../filters';
 
+import { shapeReducer } from './utils';
+
 const hasStream = ({ e: { id }, container }) =>
   !!container.shapes.areas[id]
 
 const createArea = ({ e: { area, id }, container }) =>
-  container.shapes.areas[id] = Object.keys(area).reduce((a, k) => {
-    if (area[k].hooks) {
-      return a[k]((val) => area[k].hooks.reduce((v, hook) =>
-        'function' === typeof hook ? hook(val) : path(hook, container)(val)
-      , val));
-    }
-
-    return a[k](area[k]);
-  }, d3Area());
+  container.shapes.areas[id] = shapeReducer(area, d3Area(), { container })
 
 const updateArea = ({ e: { area, id }, container }) =>
-  Object.keys(area).reduce((a, k) => {
-    if (area[k].hooks) {
-      return l[k]((val) => line[k].hooks.reduce((v, hook) =>
-        'function' === typeof hook ? hook(val) : path(hook, container)(val)
-      , val));
-    }
-
-    return a[k](area[k]);
-  }, container.shapes.areas[id])
+  shapeReducer(area, container.shapes.areas[id], { container })
 
 export default cond([
   [(ev) => !!ev.e.area && hasStream(ev), updateArea],

@@ -2,35 +2,17 @@
 import { line as d3Line } from 'd3-shape';
 
 import cond from 'ramda/src/cond';
+import path from 'ramda/src/path';
 
-const hasLine = ({ e: { id }, container }) => !!container.shapes.lines[id]
+import { shapeReducer } from './utils';
+
+const hasLine = ({ e: { id }, container }) => !!container.shapes.lines[id];
 
 const createLine = ({ e: { line, id }, container }) =>
-  container.shapes.lines[id] = Object.keys(line).reduce(
-    (l, k) => {
-      if (line[k].hooks) {
-        return l[k]((val) => line[k].hooks.reduce((v, hook) =>
-          'function' === typeof hook ? hook(val) : path(hook, container)(val)
-        , val));
-      }
-
-      return l[k](line[k]);
-    },
-    d3Line()
-  );
+  container.shapes.lines[id] = shapeReducer(line, d3Line(), { container })
 
 const updateLine = ({ e: { line, id }, container }) =>
-  Object.keys(line).reduce(
-    (l, k) => {
-      if (line[k].hooks) {
-        return l[k]((val) => line[k].hooks.reduce((v, hook) =>
-          'function' === typeof hook ? hook(val) : path(hook, container)(val)
-        , val));
-      }
-
-      return l[k](line[k]);
-    }, container.shapes.lines[id]
-  );
+  shapeReducer(line, container.shapes.lines[id], { container })
 
 export default cond([
   [(ev) => !!ev.e.line && hasLine(ev), updateLine],
