@@ -55,8 +55,7 @@ export default (selector, options) => {
         e: {
           id: name,
           type: 'scale',
-          scaleType: options.type,
-          scale: options
+          ...options,
         }, svg, container
       });
     }

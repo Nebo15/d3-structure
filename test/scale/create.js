@@ -12,14 +12,14 @@ describe('Scale Create', () => {
     const typeScaleEvent = {
       type: 'scale',
       scaleType: name,
+      domain: [Math.random(), Math.random()],
       id: `${name}Scale`,
-      scale: {
-        domain: [Math.random(), Math.random()],
-      }
     };
 
-    const expectedScale = Object.keys(typeScaleEvent.scale).reduce(
-      (s, k) => s[k](typeScaleEvent.scale[k])
+    const expectedScale = [
+      'domain'
+    ].reduce(
+      (s, k) => s[k](typeScaleEvent[k])
     , d3[`scale${name.charAt(0).toUpperCase()}${name.slice(1)}`]());
 
     it(name, () => {
@@ -36,8 +36,8 @@ describe('Scale Create', () => {
       const s = d3Stream('body');
 
       s.scale(typeScaleEvent.id, {
-        type: name,
-        domain: typeScaleEvent.scale.domain,
+        scaleType: name,
+        domain: typeScaleEvent.domain,
       });
 
       expect(

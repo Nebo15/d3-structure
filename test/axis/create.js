@@ -17,10 +17,8 @@ describe('Axis Create', () => {
     it(name, () => {
       const s = d3Stream('body');
 
-      s.dispatch({
-        type: 'scale',
+      s.scale('linearScale', {
         scaleType: 'linear',
-        id: 'linearScale',
       });
 
       const typeAxisEvent = {

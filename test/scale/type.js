@@ -20,13 +20,12 @@ describe('Scale Type', () => {
       const typeScaleEvent = {
         type: 'scale',
         scaleType: name,
-        id: `${name}Scale`,
       };
 
-      s.dispatch(typeScaleEvent);
+      s.scale(`${name}Scale`, typeScaleEvent);
 
       expect(
-        s.container.scales[typeScaleEvent.id]
+        s.container.scales[`${name}Scale`]
       ).not.be.undefined;
     });
   });

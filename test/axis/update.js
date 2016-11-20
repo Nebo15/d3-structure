@@ -7,7 +7,7 @@ import typeList from './_typeList';
 import d3Stream from '../../src';
 import axis from '../../src/axis';
 
-describe('Axis Create', () => {
+describe('Axis Update', () => {
   it('signature', () => {
     expect(axis).to.be.a('function');
     expect(axis.length).to.be.equal(1);

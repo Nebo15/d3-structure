@@ -13,28 +13,26 @@ describe('Scale Update', () => {
       const s = d3Stream('body');
 
       const typeScaleEvent = {
-        type: 'scale',
         scaleType: name,
-        id: `${name}Scale`,
       };
 
       const updateEvent = {
         type: 'scale',
-        scale: {
-          domain: [Math.random(), Math.random()],
-        },
+        domain: [Math.random(), Math.random()],
         id: `${name}Scale`,
       };
 
-      const expectedScale = Object.keys(updateEvent.scale).reduce((s, k) =>
-        s[k](updateEvent.scale[k])
+      const expectedScale = [
+        'domain'
+      ].reduce((s, k) =>
+        s[k](updateEvent[k])
       , d3[`scale${name.charAt(0).toUpperCase()}${name.slice(1)}`]());
 
-      s.dispatch(typeScaleEvent);
+      s.scale(`${name}Scale`, typeScaleEvent);
       s.dispatch(updateEvent);
 
       expect(
-        s.container.scales[typeScaleEvent.id].domain()
+        s.container.scales[`${name}Scale`].domain()
       ).be.eql(expectedScale.domain());
     });
   });
