@@ -3,6 +3,8 @@ import cond from 'ramda/src/cond';
 
 import * as d3 from 'd3-scale';
 
+import { camelize } from '../utils';
+
 const scaleProps = [
   'domain',
 ];
@@ -19,7 +21,7 @@ const createScale = ({ e, e: { id, scaleType }, container: { scales } }) =>
   scales[id] = scaleProps.reduce((reducedScale, optionName) =>
     e[optionName] && reducedScale[optionName] ?
       reducedScale[optionName](e[optionName]) : reducedScale
-  , d3[`scale${scaleType.charAt(0).toUpperCase()}${scaleType.slice(1)}`]());
+  , d3[`scale${camelize(scaleType)}`]());
 
 export default cond([
   [(ev) => hasScale(ev), updateScale],

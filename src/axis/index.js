@@ -6,6 +6,7 @@ import * as d3 from 'd3-axis';
 import {
   axis as axisFilter,
 } from '../filters';
+import { camelize } from '../utils';
 
 const hasAxis = ({ e: { id }, container }) => !!container.axises[id]
 
@@ -13,10 +14,7 @@ const createAxis = ({ e: { axis = {}, orient, id, scaleId }, container }) =>
   container.axises[id] = Object.keys(axis).reduce(
     (a, k)=> {
       return a[k](axis[k]);
-    },
-    d3[`axis${orient.charAt(0).toUpperCase()}${orient.slice(1)}`](
-      container.scales[scaleId]
-    )
+    }, d3[`axis${camelize(orient)}`](container.scales[scaleId])
   );
 
 const updateAxis = ({ e: { axis = {}, id }, container }) =>
