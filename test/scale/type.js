@@ -10,7 +10,7 @@ import scale from '../../src/scale';
 describe('Scale Type', () => {
   it('signature', () => {
     expect(scale).to.be.a('function');
-    expect(scale.length).to.be.equal(1);
+    expect(scale.length).to.be.equal(2);
   });
 
   typeList.forEach((name) => {
@@ -18,8 +18,7 @@ describe('Scale Type', () => {
       const s = d3Stream('body');
 
       const typeScaleEvent = {
-        type: 'scale',
-        scaleType: name,
+        type: name,
       };
 
       s.scale(`${name}Scale`, typeScaleEvent);

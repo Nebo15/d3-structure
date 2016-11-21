@@ -1,30 +1,39 @@
 
 import { area as d3Area } from 'd3-shape';
 
+import has from 'ramda/src/has';
+import merge from 'ramda/src/merge';
 import cond from 'ramda/src/cond';
 import path from 'ramda/src/path';
 
-import {
-  shape as shapeFilter,
-  area as areaFilter,
-} from '../filters';
-
 import { shapeReducer } from '../utils';
 
-const hasStream = ({ e: { id }, container }) =>
-  !!container.shapes.areas[id];
+const areaProps = [
+  'x',
+  'y',
+  'y1',
+  'defined',
+  'curve',
+  'context',
+];
 
-const createArea = ({ e: { area, id }, container }) =>
-  container.shapes.areas[id] = shapeReducer(d3Area(), Object.assign({}, {
-    container,
-  }, area));
+const createArea = ({ id, ...options }, areas) =>
+  areas[id] = areaProps.reduce((area, prop) =>
+    shapeReducer(area, prop, options)
+  , d3Area());
 
-const updateArea = ({ e: { area, id }, container }) =>
-  shapeReducer(container.shapes.areas[id], Object.assign({}, {
-    container,
-  }, area));
+const updateArea = ({ id, ...options }, areas) =>
+  areaProps.reduce((area, prop) =>
+    shapeReducer(area, prop, options)
+  , areas[id]);
 
 export default cond([
-  [(ev) => !!ev.e.area && hasStream(ev), updateArea],
-  [(ev) => !!ev.e.area && !hasStream(ev), createArea],
+  [
+    ({ id }, { areas }) => has(id, areas),
+    (options, { areas }) => updateArea(options, areas)
+  ],
+  [
+    ({ id }, { areas }) => !has(id, areas),
+    (options, { areas }) => createArea(options, areas)
+  ],
 ]);

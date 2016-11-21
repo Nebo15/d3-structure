@@ -10,10 +10,8 @@ import scale from '../../src/scale';
 describe('Scale Create', () => {
   typeList.forEach((name) => {
     const typeScaleEvent = {
-      type: 'scale',
-      scaleType: name,
+      type: name,
       domain: [Math.random(), Math.random()],
-      id: `${name}Scale`,
     };
 
     const expectedScale = [
@@ -25,10 +23,10 @@ describe('Scale Create', () => {
     it(name, () => {
       const s = d3Stream('body');
 
-      s.dispatch(typeScaleEvent);
+      s.scale(`${name}Scale`, typeScaleEvent);
 
       expect(
-        s.container.scales[typeScaleEvent.id].domain()
+        s.container.scales[`${name}Scale`].domain()
       ).be.eql(expectedScale.domain());
     });
 
@@ -36,7 +34,7 @@ describe('Scale Create', () => {
       const s = d3Stream('body');
 
       s.scale(typeScaleEvent.id, {
-        scaleType: name,
+        type: name,
         domain: typeScaleEvent.domain,
       });
 

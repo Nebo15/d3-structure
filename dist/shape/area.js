@@ -6,6 +6,14 @@ Object.defineProperty(exports, "__esModule", {
 
 var _d3Shape = require('d3-shape');
 
+var _has = require('ramda/src/has');
+
+var _has2 = _interopRequireDefault(_has);
+
+var _merge = require('ramda/src/merge');
+
+var _merge2 = _interopRequireDefault(_merge);
+
 var _cond = require('ramda/src/cond');
 
 var _cond2 = _interopRequireDefault(_cond);
@@ -14,54 +22,44 @@ var _path = require('ramda/src/path');
 
 var _path2 = _interopRequireDefault(_path);
 
-var _filters = require('../filters');
+var _utils = require('../utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var hasStream = function hasStream(_ref) {
-  var id = _ref.e.id,
-      container = _ref.container;
-  return !!container.shapes.areas[id];
-};
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var createArea = function createArea(_ref2) {
-  var _ref2$e = _ref2.e,
-      area = _ref2$e.area,
-      id = _ref2$e.id,
-      container = _ref2.container;
-  return container.shapes.areas[id] = Object.keys(area).reduce(function (a, k) {
-    if (area[k].hooks) {
-      return a[k](function (val) {
-        return area[k].hooks.reduce(function (v, hook) {
-          return 'function' === typeof hook ? hook(val) : (0, _path2.default)(hook, container)(val);
-        }, val);
-      });
-    }
+var areaProps = ['x', 'y', 'defined', 'curve', 'context'];
 
-    return a[k](area[k]);
+var createArea = function createArea(_ref, areas) {
+  var id = _ref.id,
+      options = _objectWithoutProperties(_ref, ['id']);
+
+  return areas[id] = areaProps.reduce(function (area, prop) {
+    return (0, _utils.shapeReducer)(area, prop, options);
   }, (0, _d3Shape.area)());
 };
 
-var updateArea = function updateArea(_ref3) {
-  var _ref3$e = _ref3.e,
-      area = _ref3$e.area,
-      id = _ref3$e.id,
-      container = _ref3.container;
-  return Object.keys(area).reduce(function (a, k) {
-    if (area[k].hooks) {
-      return l[k](function (val) {
-        return line[k].hooks.reduce(function (v, hook) {
-          return 'function' === typeof hook ? hook(val) : (0, _path2.default)(hook, container)(val);
-        }, val);
-      });
-    }
+var updateArea = function updateArea(_ref2, areas) {
+  var id = _ref2.id,
+      options = _objectWithoutProperties(_ref2, ['id']);
 
-    return a[k](area[k]);
-  }, container.shapes.areas[id]);
+  return areaProps.reduce(function (area, prop) {
+    return (0, _utils.shapeReducer)(area, prop, options);
+  }, areas[id]);
 };
 
-exports.default = (0, _cond2.default)([[function (ev) {
-  return !!ev.e.area && hasStream(ev);
-}, updateArea], [function (ev) {
-  return !!ev.e.area && !hasStream(ev);
-}, createArea]]);
+exports.default = (0, _cond2.default)([[function (_ref3, _ref4) {
+  var id = _ref3.id;
+  var areas = _ref4.areas;
+  return (0, _has2.default)(id, areas);
+}, function (options, _ref5) {
+  var areas = _ref5.areas;
+  return updateArea(options, areas);
+}], [function (_ref6, _ref7) {
+  var id = _ref6.id;
+  var areas = _ref7.areas;
+  return !(0, _has2.default)(id, areas);
+}, function (options, _ref8) {
+  var areas = _ref8.areas;
+  return createArea(options, areas);
+}]]);

@@ -22,58 +22,42 @@ const parseDate = timeParse('%b %Y');
 simpleArea.d3.select('svg').attr('width', 960);
 simpleArea.d3.select('svg').attr('height', 500);
 
-simpleArea.dispatch({
-  type: 'scale',
-  id: 'xScale',
-  scaleType: 'time',
-  scale: {
-    range: [0, width],
+simpleArea.scale('xScale', {
+  type: 'time',
+  range: [0, width],
+});
+
+simpleArea.scale('yScale', {
+  type: 'linear',
+  range: [0, height],
+});
+
+simpleArea.axis('xAxis', {
+  type: 'bottom',
+  scale: scales['xScale'],
+});
+
+simpleArea.axis('yAxis', {
+  type: 'bottom',
+  scale: scales['yScale'],
+});
+
+simpleArea.svg({
+  node: {
+    tagName: 'g',
+    attrs: {
+      id: 'simpleAreaGroup',
+      transform:  'translate(' + margin.left + ',' + margin.top + ')',
+    },
   },
 });
 
-simpleArea.dispatch({
-  type: 'scale',
-  id: 'yScale',
-  scaleType: 'linear',
-  scale: {
-    range: [height, 0],
-  },
-});
-
-simpleArea.dispatch({
-  type: 'axis',
-  id: 'xAxis',
-  orient: 'bottom',
-  scaleId: 'xScale',
-});
-
-simpleArea.dispatch({
-  type: 'axis',
-  id: 'yAxis',
-  orient: 'left',
-  scaleId: 'yScale',
-});
-
-simpleArea.dispatch({
-  type: 'selection',
-  tagName: 'g',
-  id: 'simpleAreaGroup',
-  node: {},
-  attrs: {
-    transform:  'translate(' + margin.left + ',' + margin.top + ')',
-  },
-});
-
-simpleArea.dispatch({
-  type: 'shape',
-  shape: 'area',
-  id: 'mainArea',
-  area: {
-    curve: curveMonotoneX,
-    y0: height,
-    y1: (d) => scales.yScale(d.price),
-    x: (d) => scales.xScale(d.date),
-  },
+simpleArea.shape('mainArea', {
+  type: 'area',
+  y0: height,
+  curve: () => curveMonotoneX,
+  y1: () => d => scales.yScale(d.price),
+  x: () => d => scales.xScale(d.date),
 });
 
 csv('data/simple-area.csv', (d)=> {
@@ -82,56 +66,23 @@ csv('data/simple-area.csv', (d)=> {
 
   return d;
 }, (error, data) => {
-  simpleArea.dispatch({
-    type: 'scale',
-    id: 'xScale',
-    scale: {
-      domain: extent(data, (d) => d.date),
-    },
+  simpleArea.scale('xScale', {
+    domain: extent(data, (d) => d.date),
   });
 
-  simpleArea.dispatch({
-    type: 'scale',
-    id: 'yScale',
-    scale: {
-      domain: [0, max(data, (d) => d.price)],
-    },
+  simpleArea.scale('yScale', {
+    domain: [0, max(data, (d) => d.price)],
   });
 
-  simpleArea.dispatch({
-    type: 'selection',
-    id: 'simpleArea',
-    selector: '#simpleAreaGroup',
-    tagName: 'path',
+  simpleArea.svg({
+    container: '#simpleAreaGroup',
     node: {
       datum: data,
+      tagName: 'path',
+      attrs: {
+        id: 'simpleArea',
+        d: areas.mainArea,
+      },
     },
-    attrs: {
-      d: areas.mainArea,
-    },
-  });
-
-  simpleArea.dispatch({
-    type: 'selection',
-    id: 'xAxis',
-    tagName: 'g',
-    node: {
-      call: axises.xAxis,
-    },
-    attrs: {
-      transform:' translate(' + margin.left + ',' + (height + margin.top) + ')',
-    }
-  });
-
-  simpleArea.dispatch({
-    type: 'selection',
-    id: 'yAxis',
-    tagName: 'g',
-    node: {
-      call: axises.yAxis,
-    },
-    attrs: {
-      transform:' translate(' + margin.left + ', ' + margin.top + ')',
-    }
   });
 });

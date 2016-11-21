@@ -1,5 +1,6 @@
 
 import cond from 'ramda/src/cond';
+import has from 'ramda/src/has';
 
 import * as d3 from 'd3-scale';
 
@@ -7,23 +8,30 @@ import { camelize } from '../utils';
 
 const scaleProps = [
   'domain',
+  'range',
+  'rangeRound',
+  'clamp',
+  'invert',
+  'interpolate',
+  'ticks',
+  'tickFormat',
+  'nice',
+  'copy'
 ];
 
-const hasScale = ({ e: { id }, container }) => !!container.scales[id]
+const updateScale = ({ id, ...options }, scales) =>
+  scaleProps.reduce((scale, option) =>
+    options[option] && scale[option] ?
+      scale[option](options[option]) : scale
+  , scales[id]);
 
-const updateScale = ({ e, container: { scales } }) =>
-  scaleProps.reduce((reducedScale, optionName) =>
-    e[optionName] && reducedScale[optionName] ?
-      reducedScale[optionName](e[optionName]) : reducedScale
-  , scales[e.id]);
-
-const createScale = ({ e, e: { id, scaleType }, container: { scales } }) =>
-  scales[id] = scaleProps.reduce((reducedScale, optionName) =>
-    e[optionName] && reducedScale[optionName] ?
-      reducedScale[optionName](e[optionName]) : reducedScale
-  , d3[`scale${camelize(scaleType)}`]());
+const createScale = ({ id, type, ...options }, scales) =>
+  scales[id] = scaleProps.reduce((scale, option) =>
+    options[option] && scale[option] ?
+      scale[option](options[option]) : scale
+  , d3[`scale${camelize(type)}`]());
 
 export default cond([
-  [(ev) => hasScale(ev), updateScale],
-  [(ev) => !hasScale(ev), createScale]
+  [({ id }, scales) => has(id, scales), updateScale],
+  [({ id }, scales) => !has(id, scales), createScale]
 ]);

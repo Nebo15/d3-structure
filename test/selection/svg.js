@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { selection } from 'd3-selection';
 
 import d3Stream from '../../src';
-import svg from '../../src/selection/svg';
+import svg from '../../src/selection';
 
 describe('Selection SVG', () => {
   beforeEach(() => {
@@ -15,68 +15,106 @@ describe('Selection SVG', () => {
   });
 
   describe('events', () => {
-    it('should create defs on DOM', () => {
+    it('should append `defs` tag to DOM', () => {
       const defsId = '' + Math.random();
       const s = d3Stream('body');
 
       const event = {
-        type: 'selection',
-        tagName: 'defs',
-        id: defsId,
-        node: {},
-        attrs: {}
-      };
-
-      s.dispatch(event);
-
-      const defs = document.body.querySelector(
-        `defs[id="${defsId}"]`
-      );
-
-      expect(defs).to.be.not.null;
-      expect(defs.getAttribute('id')).to.be.equal(defsId);
-    });
-
-    it('should update defs on DOM', () => {
-      const defsId = '' + Math.random();
-      const s = d3Stream('body');
-
-      const event = {
-        type: 'selection',
-        tagName: 'defs',
-        id: defsId,
-        node: {},
-        attrs: {
-          someValue: '' + Math.random(),
-        }
-      };
-
-      const updateEvent = {
-        type: 'selection',
-        tagName: 'defs',
-        id: defsId,
-        node: {},
-        attrs: {
-          someValue: '' + Math.random(),
+        node: {
+          tagName: 'defs',
+          attrs: {
+            id: defsId,
+          },
+          styles: {
+            fill: 'red',
+          },
+          text: '42',
         },
       };
 
-      s.dispatch(event);
+      s.svg(event);
 
       const defs = document.body.querySelector(
         `defs[id="${defsId}"]`
       );
 
       expect(defs).to.be.not.null;
+      expect(defs.style.fill).to.be.equal('red');
+      expect(defs.innerHTML).to.be.equal('42');
+    });
+
+    it('should append multiple `defs` tags to DOM', () => {
+      const defsId = '' + Math.random();
+      const defsId2 = '' + Math.random();
+      const s = d3Stream('body');
+
+      const event = {
+        nodes: [{
+          tagName: 'defs',
+          attrs: {
+            id: defsId,
+          },
+        }, {
+          tagName: 'g',
+          attrs: {
+            id: defsId2,
+          },
+        }],
+      };
+
+      s.svg(event);
+
+      const defs = document.body.querySelector(
+        `defs[id="${defsId}"]`
+      );
+
+      const defs2 = document.body.querySelector(
+        `g[id="${defsId2}"]`
+      );
+
+      expect(defs).to.be.not.null;
+      expect(defs2).to.be.not.null;
+    });
+
+    it('should update defs on DOM', () => {
+      const defsId = 'defsId';
+      const s = d3Stream('body');
+
+      const event = {
+        node: {
+          tagName: 'defs',
+          attrs: {
+            id: defsId,
+            someValue: '' + Math.random(),
+          }
+        },
+      };
+
+      const updateEvent = {
+        selector: `#${defsId}`,
+        node: {
+          attrs: {
+            someValue: '' + Math.random(),
+          },
+          styles: {
+            fill: 'blue',
+          }
+        },
+      };
+
+      s.svg(event);
+
+      const defs = document.body.querySelector(
+        `defs[id="${defsId}"]`
+      );
+
+      s.svg(updateEvent);
+
       expect(
         defs.getAttribute('someValue')
-      ).to.be.equal(event.attrs.someValue);
+      ).to.be.equal(updateEvent.node.attrs.someValue);
 
-      s.dispatch(updateEvent);
-
-      expect(
-        defs.getAttribute('someValue')
-      ).to.be.equal(updateEvent.attrs.someValue);
+      expect(defs.style.fill).to.be.equal('blue');
     });
   });
 });

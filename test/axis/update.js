@@ -8,61 +8,46 @@ import d3Stream from '../../src';
 import axis from '../../src/axis';
 
 describe('Axis Update', () => {
-  it('signature', () => {
-    expect(axis).to.be.a('function');
-    expect(axis.length).to.be.equal(1);
-  });
-
   typeList.forEach((name) => {
     it(name, () => {
       const s = d3Stream('body');
 
-      s.dispatch({
-        type: 'scale',
-        scaleType: 'linear',
-        id: 'linearScale',
+      s.scale('linearScale', {
+        type: 'linear',
       });
 
       const typeAxisEvent = {
-        type: 'axis',
-        orient: name,
-        id: `${name}Axis`,
-        scaleId: 'linearScale',
-        axis: {
-          tickPadding: Math.floor(
-            (Math.random() * 100) + 100
-          ),
-          tickValues: [Math.floor(
-            (Math.random() * 100) + 100
-          )],
-        }
+        type: name,
+        scale: s.container.scales['linearScale'],
+        tickPadding: Math.floor(
+          (Math.random() * 100) + 100
+        ),
+        tickValues: [Math.floor(
+          (Math.random() * 100) + 100
+        )],
       };
 
       const updateEvent = {
-        type: 'axis',
-        id: `${name}Axis`,
-        axis: {
-          tickPadding: Math.floor(
-            (Math.random() * 100) + 100
-          ),
-          tickValues: [Math.floor(
-            (Math.random() * 100) + 100
-          )],
-        }
+        tickPadding: Math.floor(
+          (Math.random() * 100) + 100
+        ),
+        tickValues: [Math.floor(
+          (Math.random() * 100) + 100
+        )],
       };
 
-      s.dispatch(typeAxisEvent);
-      s.dispatch(updateEvent);
+      s.axis(`${name}Axis`, typeAxisEvent);
+      s.axis(`${name}Axis`, updateEvent);
 
-      const expectedAxis = Object.keys(updateEvent.axis).reduce(
-        (a, k)=> a[k](updateEvent.axis[k]),
+      const expectedAxis = ['tickPadding', 'tickValues'].reduce(
+        (a, k)=> a[k](updateEvent[k]),
         d3[`axis${name.charAt(0).toUpperCase()}${name.slice(1)}`](
-          s.container.scales[typeAxisEvent.scaleId]
+          s.container.scales['linearScale']
         )
       );
 
       expect(
-        s.container.axises[typeAxisEvent.id].tickPadding()
+        s.container.axises[`${name}Axis`].tickPadding()
       ).to.be.eql(expectedAxis.tickPadding());
     });
   });

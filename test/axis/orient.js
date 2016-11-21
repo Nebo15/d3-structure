@@ -10,23 +10,16 @@ import axis from '../../src/axis';
 describe('Axis Orient', () => {
   it('signature', () => {
     expect(axis).to.be.a('function');
-    expect(axis.length).to.be.equal(1);
   });
 
-  typeList.forEach((name) => {
-    it(name, () => {
+  typeList.forEach((type) => {
+    it(type, () => {
       const s = d3Stream('body');
 
-      const typeAxisEvent = {
-        type: 'axis',
-        orient: name,
-        id: `${name}Axis`,
-      };
-
-      s.dispatch(typeAxisEvent);
+      s.axis(`${type}Axis`, { type });
 
       expect(
-        s.container.axises[typeAxisEvent.id]
+        s.container.axises[`${type}Axis`]
       ).not.be.undefined;
     });
   });

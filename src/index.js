@@ -1,5 +1,5 @@
 
-import cond from 'ramda/src/cond';
+import merge from 'ramda/src/merge';
 
 import d3Select from './selection';
 
@@ -8,14 +8,6 @@ import selection from './selection/index';
 import axis from './axis';
 import scale from './scale';
 import transition from './transition';
-
-import {
-  shape as shapeFilter,
-  selection as selectionFilter,
-  axis as axisFilter,
-  scale as scaleFilter,
-  transition as transitionFilter,
-} from './filters';
 
 export default (selector, options) => {
   const asD3 = d3Select(selector);
@@ -33,31 +25,28 @@ export default (selector, options) => {
     transitions: {},
   };
 
-  const subject = cond([
-    [(e) => shapeFilter(e), shape],
-    [(e) => selectionFilter(e), selection],
-    [(e) => scaleFilter(e), scale],
-    [(e) => axisFilter(e), axis],
-    [(e) => transitionFilter(e), transition],
-  ]);
-
   const API = {
     d3: asD3,
     container,
-    dispatch(e) {
-      return subject({
-        e, svg, container
-      });
+
+    scale(id, options = {}) {
+      return scale(merge({ id }, options), container.scales)
     },
 
-    scale(name, options) {
-      return subject({
-        e: {
-          id: name,
-          type: 'scale',
-          ...options,
-        }, svg, container
-      });
+    shape(id, options = {}) {
+      return shape(merge({ id }, options), container.shapes);
+    },
+
+    axis(id, options = {}) {
+      return axis(merge({ id }, options), container.axises)
+    },
+
+    svg(options = {}) {
+      return selection(options, svg);
+    },
+
+    transition(id, options = {}) {
+      return transition(merge({ id }, options), container.transitions);
     }
   };
 

@@ -1,12 +1,13 @@
 
-export const shape = ({ e }) => e.type === 'shape';
-export const line = ({ e }) => e.shape === 'line';
-export const area = ({ e }) => e.shape === 'area';
+export const shape = (subjType) => subjType === 'shape';
 
-export const selection = ({ e }) => e.type === 'selection';
+export const line = ({ type }) => type === 'line';
+export const area = ({ type }) => type === 'area';
 
-export const axis = ({ e }) => e.type === 'axis';
+export const selection = (subjType) => subjType === 'selection';
 
-export const scale = ({ e }) => e.type === 'scale';
+export const axis = (subjType) => subjType === 'axis';
+
+export const scale = (subjType) => subjType === 'scale';
 
 export const transition = ({ e }) => e.type === 'transition';

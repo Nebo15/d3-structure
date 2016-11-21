@@ -8,6 +8,10 @@ var _cond = require('ramda/src/cond');
 
 var _cond2 = _interopRequireDefault(_cond);
 
+var _has = require('ramda/src/has');
+
+var _has2 = _interopRequireDefault(_has);
+
 var _d3Transition = require('d3-transition');
 
 var d3 = _interopRequireWildcard(_d3Transition);
@@ -16,44 +20,37 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var hasTransition = function hasTransition(_ref) {
-  var id = _ref.e.id,
-      container = _ref.container;
-  return !!container.transitions[id];
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var transitionProps = ['call', 'delay', 'duration', 'ease', 'text'];
+
+var createTransition = function createTransition(_ref, transitions) {
+  var id = _ref.id,
+      _ref$attrs = _ref.attrs,
+      attrs = _ref$attrs === undefined ? {} : _ref$attrs,
+      _ref$styles = _ref.styles,
+      styles = _ref$styles === undefined ? {} : _ref$styles,
+      options = _objectWithoutProperties(_ref, ['id', 'attrs', 'styles']);
+
+  var transition = d3.transition(id);
+
+  transitions[id] = transition;
+
+  Object.keys(attrs).forEach(function (attr) {
+    return transition.attr(attr, attrs[attr]);
+  });
+  Object.keys(styles).forEach(function (style) {
+    return transition.style(style, styles[style]);
+  });
+
+  transitionProps.forEach(function (prop) {
+    return options[prop] && transition[prop] && transition[prop](options[prop]);
+  });
+
+  return transition;
 };
 
-var createTransition = function createTransition(_ref2) {
-  var _ref2$e = _ref2.e,
-      _ref2$e$transition = _ref2$e.transition,
-      transition = _ref2$e$transition === undefined ? {} : _ref2$e$transition,
-      id = _ref2$e.id,
-      _ref2$e$attrs = _ref2$e.attrs,
-      attrs = _ref2$e$attrs === undefined ? {} : _ref2$e$attrs,
-      container = _ref2.container;
-  return container.transitions[id] = Object.keys(attrs).reduce(function (t, attrKey) {
-    return t.attr(attrKey, attrs[attrKey]);
-  }, Object.keys(transition).reduce(function (t, k) {
-    return transition[k] instanceof Array ? t[k].apply(t, transition[k]) : t[k](transition[k]);
-  }, d3.transition(id)));
-};
-
-var updateTransition = function updateTransition(_ref3) {
-  var _ref3$e = _ref3.e,
-      _ref3$e$transition = _ref3$e.transition,
-      transition = _ref3$e$transition === undefined ? {} : _ref3$e$transition,
-      id = _ref3$e.id,
-      _ref3$e$attrs = _ref3$e.attrs,
-      attrs = _ref3$e$attrs === undefined ? {} : _ref3$e$attrs,
-      container = _ref3.container;
-  return container.transitions[id] = Object.keys(attrs).reduce(function (t, attrKey) {
-    return t.attr(attrKey, attrs[attrKey]);
-  }, Object.keys(transition).reduce(function (t, k) {
-    return transition[k] instanceof Array ? t[k].apply(t, transition[k]) : t[k](transition[k]);
-  }, container.transitions[id]));
-};
-
-exports.default = (0, _cond2.default)([[function (ev) {
-  return hasTransition(ev);
-}, updateTransition], [function (ev) {
-  return !hasTransition(ev);
+exports.default = (0, _cond2.default)([[function (_ref2, transitions) {
+  var id = _ref2.id;
+  return !(0, _has2.default)(id, transitions);
 }, createTransition]]);

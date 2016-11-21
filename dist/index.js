@@ -4,41 +4,39 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _cond = require('ramda/src/cond');
+var _merge = require('ramda/src/merge');
 
-var _cond2 = _interopRequireDefault(_cond);
+var _merge2 = _interopRequireDefault(_merge);
 
 var _selection = require('./selection');
 
 var _selection2 = _interopRequireDefault(_selection);
 
-var _shape = require('./shape');
+var _shape2 = require('./shape');
 
-var _shape2 = _interopRequireDefault(_shape);
+var _shape3 = _interopRequireDefault(_shape2);
 
 var _index = require('./selection/index');
 
 var _index2 = _interopRequireDefault(_index);
 
-var _axis = require('./axis');
+var _axis2 = require('./axis');
 
-var _axis2 = _interopRequireDefault(_axis);
+var _axis3 = _interopRequireDefault(_axis2);
 
-var _scale = require('./scale');
+var _scale2 = require('./scale');
 
-var _scale2 = _interopRequireDefault(_scale);
+var _scale3 = _interopRequireDefault(_scale2);
 
-var _transition = require('./transition');
+var _transition2 = require('./transition');
 
-var _transition2 = _interopRequireDefault(_transition);
-
-var _filters = require('./filters');
+var _transition3 = _interopRequireDefault(_transition2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function (selector) {
+exports.default = function (selector, options) {
   var asD3 = (0, _selection2.default)(selector);
-  var svg = asD3.append('svg');
+  var _svg = asD3.append('svg');
 
   var container = {
     shapes: {
@@ -52,25 +50,34 @@ exports.default = function (selector) {
     transitions: {}
   };
 
-  var subject = (0, _cond2.default)([[function (e) {
-    return (0, _filters.shape)(e);
-  }, _shape2.default], [function (e) {
-    return (0, _filters.selection)(e);
-  }, _index2.default], [function (e) {
-    return (0, _filters.scale)(e);
-  }, _scale2.default], [function (e) {
-    return (0, _filters.axis)(e);
-  }, _axis2.default], [function (e) {
-    return (0, _filters.transition)(e);
-  }, _transition2.default]]);
-
   var API = {
     d3: asD3,
     container: container,
-    dispatch: function dispatch(e) {
-      return subject({
-        e: e, svg: svg, container: container
-      });
+
+    scale: function scale(id) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      return (0, _scale3.default)((0, _merge2.default)({ id: id }, options), container.scales);
+    },
+    shape: function shape(id) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      return (0, _shape3.default)((0, _merge2.default)({ id: id }, options), container.shapes);
+    },
+    axis: function axis(id) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      return (0, _axis3.default)((0, _merge2.default)({ id: id }, options), container.axises);
+    },
+    svg: function svg(id) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      return (0, _index2.default)((0, _merge2.default)({ id: id }, options), _svg);
+    },
+    transition: function transition(id) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      return (0, _transition3.default)((0, _merge2.default)({ id: id }, options), container.transitions);
     }
   };
 
