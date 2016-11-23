@@ -1,22 +1,25 @@
 
 import cond from 'ramda/src/cond';
+import has from 'ramda/src/has';
 
 import {
   selection as selectionFilter,
 } from '../filters';
-
-const hasNode = ({ selector, container = '' } , asD3) =>
-  selector && !!asD3.selectAll(`${container} ${selector}`).size()
 
 const instanceProps = [
   'html',
   'text',
   'datum',
   'data',
-]
+];
 
-const appendNode = ({ attrs = {}, styles = {}, tagName, ...options }, asD3) => {
+const appendNode = (
+  id, { attrs = {}, styles = {}, tagName, ...options },
+  asD3, selections
+) => {
   const node = asD3.append(tagName);
+
+  selections[id] = node;
 
   instanceProps.forEach((prop) =>
     options[prop] && node[prop] && node[prop](options[prop])
@@ -28,23 +31,24 @@ const appendNode = ({ attrs = {}, styles = {}, tagName, ...options }, asD3) => {
   return node;
 }
 
-const appendNodes = ({ nodes, node, container = null }, asD3) => {
-  const wrapper = container ? asD3.select(container) : asD3;
+const appendNodes = (
+  id, { nodes, node, selector = null },
+  asD3, selections
+) => {
+  const wrapper = selector ? asD3.select(selector) : asD3;
 
   if (nodes && nodes.length) {
-    return nodes.map((n) => appendNode(n, wrapper))
+    return nodes.map((n, k) => appendNode(`${id}-k`, n, wrapper, selections));
   }
 
-  return appendNode(node, wrapper);
+  return appendNode(id, node, wrapper, selections);
 };
 
-const updateNode = ({
-  node: { attrs = {}, styles = {} },
-  selector, ...options
-}, asD3) => {
-  const selection = asD3.selectAll(selector);
-
-  console.log(selection);
+const updateNode = (
+  id, { node: { attrs = {}, styles = {} }, selector, ...options},
+  asD3, selections
+) => {
+  const selection = selections[id];
 
   instanceProps.forEach((prop) =>
     options[prop] && selection[prop] && selection[prop](options[prop])
@@ -57,6 +61,6 @@ const updateNode = ({
 };
 
 export default cond([
-  [hasNode, updateNode],
-  [(ev, asD3) => !hasNode(ev, asD3), appendNodes]
+  [(id, ev, asD3, selections) => has(id, selections), updateNode],
+  [(id, ev, asD3, selections) => !has(id, selections), appendNodes]
 ]);

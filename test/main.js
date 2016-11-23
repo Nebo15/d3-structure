@@ -38,5 +38,9 @@ describe('d3-stream', () => {
     it('transition', () => {
       expect(s).have.property('transition').and.be.a('function');
     });
+
+    it('update', () => {
+      expect(s).have.property('update').and.be.a('function');
+    });
   });
 });

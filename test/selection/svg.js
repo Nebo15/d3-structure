@@ -32,7 +32,7 @@ describe('Selection SVG', () => {
         },
       };
 
-      s.svg(event);
+      s.svg('defs', event);
 
       const defs = document.body.querySelector(
         `defs[id="${defsId}"]`
@@ -62,7 +62,7 @@ describe('Selection SVG', () => {
         }],
       };
 
-      s.svg(event);
+      s.svg('defs', event);
 
       const defs = document.body.querySelector(
         `defs[id="${defsId}"]`
@@ -102,19 +102,26 @@ describe('Selection SVG', () => {
         },
       };
 
-      s.svg(event);
+      s.svg('defs', event);
 
       const defs = document.body.querySelector(
         `defs[id="${defsId}"]`
       );
 
-      s.svg(updateEvent);
+      s.svg('defs', updateEvent);
 
       expect(
         defs.getAttribute('someValue')
       ).to.be.equal(updateEvent.node.attrs.someValue);
 
       expect(defs.style.fill).to.be.equal('blue');
+    });
+
+    it('should save link to selections in container', () => {
+      const defsId = 'defsId';
+      const s = d3Stream('body');
+
+
     });
   });
 });

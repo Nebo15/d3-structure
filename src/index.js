@@ -23,6 +23,7 @@ export default (selector, options) => {
     axises: {},
     scales: {},
     transitions: {},
+    selections: {},
   };
 
   const API = {
@@ -41,13 +42,22 @@ export default (selector, options) => {
       return axis(merge({ id }, options), container.axises)
     },
 
-    svg(options = {}) {
-      return selection(options, svg);
+    svg(id, options = {}) {
+      return selection(id, options, svg, container.selections);
     },
 
     transition(id, options = {}) {
       return transition(merge({ id }, options), container.transitions);
-    }
+    },
+
+    update(data, options) {
+      return [
+        ['lines', 'arcs', 'pies', 'pies', 'areas'],
+        'axises', 'scales', 'transitions', 'selections'
+      ].reduce(function(data, type) {
+
+      }, data);
+    },
   };
 
   return API;

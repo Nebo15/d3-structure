@@ -3,7 +3,7 @@ import dstream from '../../src';
 import { csv } from 'd3-xhr';
 import { timeParse } from 'd3-time-format';
 import { curveMonotoneX } from 'd3-shape';
-import { extent, max } from 'd3-array';
+import { extent, max, min } from 'd3-array';
 
 const simpleArea = dstream(document.querySelector('.simpleArea'));
 
@@ -29,7 +29,7 @@ simpleArea.scale('xScale', {
 
 simpleArea.scale('yScale', {
   type: 'linear',
-  range: [0, height],
+  range: [height, 0],
 });
 
 simpleArea.axis('xAxis', {
@@ -42,7 +42,7 @@ simpleArea.axis('yAxis', {
   scale: scales['yScale'],
 });
 
-simpleArea.svg({
+simpleArea.svg('simpleAreaGroup', {
   node: {
     tagName: 'g',
     attrs: {
@@ -67,18 +67,25 @@ csv('data/simple-area.csv', (d)=> {
   return d;
 }, (error, data) => {
   simpleArea.scale('xScale', {
+    invert: true,
+    nice: true,
     domain: extent(data, (d) => d.date),
   });
 
   simpleArea.scale('yScale', {
+    invert: true,
+    nice: true,
     domain: [0, max(data, (d) => d.price)],
   });
 
-  simpleArea.svg({
-    container: '#simpleAreaGroup',
+  simpleArea.svg('simpleAreaPath', {
+    selector: '#simpleAreaGroup',
     node: {
       datum: data,
       tagName: 'path',
+      styles: {
+        fill: 'steelblue',
+      },
       attrs: {
         id: 'simpleArea',
         d: areas.mainArea,
