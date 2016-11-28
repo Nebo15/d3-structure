@@ -47,7 +47,8 @@ exports.default = function (selector, options) {
     },
     axises: {},
     scales: {},
-    transitions: {}
+    transitions: {},
+    selections: {}
   };
 
   var API = {
@@ -72,7 +73,7 @@ exports.default = function (selector, options) {
     svg: function svg(id) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      return (0, _index2.default)((0, _merge2.default)({ id: id }, options), _svg);
+      return (0, _index2.default)(id, options, _svg, container.selections);
     },
     transition: function transition(id) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};

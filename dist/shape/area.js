@@ -28,7 +28,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var areaProps = ['x', 'y', 'defined', 'curve', 'context'];
+var areaProps = ['x', 'y', 'x0', 'x1', 'y0', 'y1', 'defined', 'curve', 'context'];
 
 var createArea = function createArea(_ref, areas) {
   var id = _ref.id,

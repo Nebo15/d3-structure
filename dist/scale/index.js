@@ -41,7 +41,13 @@ var createScale = function createScale(_ref2, scales) {
       options = _objectWithoutProperties(_ref2, ['id', 'type']);
 
   return scales[id] = scaleProps.reduce(function (scale, option) {
-    return options[option] && scale[option] ? scale[option](options[option]) : scale;
+    var s = options[option] && scale[option] ? scale[option](options[option]) : scale;
+
+    if (s !== scale) {
+      return scale;
+    }
+
+    return s;
   }, d3['scale' + (0, _utils.camelize)(type)]());
 };
 
