@@ -16,7 +16,7 @@ const instanceProps = [
 ];
 
 const appendNode = (
-  id, { attrs = {}, styles = {}, tagName, ...options },
+  id, { node: { attrs = {}, styles = {}, tagName, ...options } },
   asD3, selections
 ) => {
   const node = asD3.append(tagName);
@@ -40,14 +40,14 @@ const appendNodes = (
   const wrapper = selector ? asD3.select(selector) : asD3;
 
   if (nodes && nodes.length) {
-    return nodes.map((n, k) => appendNode(`${id}-k`, n, wrapper, selections));
+    return nodes.map((n, k) => appendNode(`${id}-k`, { node: n }, wrapper, selections));
   }
 
-  return appendNode(id, node, wrapper, selections);
+  return appendNode(id, { node }, wrapper, selections);
 };
 
 const updateNode = (
-  id, { node: { attrs = {}, styles = {} }, selector, ...options},
+  id, { node: { attrs = {}, styles = {}, ...options}},
   asD3, selections
 ) => {
   const selection = selections[id];

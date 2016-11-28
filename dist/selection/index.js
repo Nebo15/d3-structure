@@ -21,12 +21,13 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 var instanceProps = ['html', 'text', 'datum', 'data', 'call', 'remove'];
 
 var appendNode = function appendNode(id, _ref, asD3, selections) {
-  var _ref$attrs = _ref.attrs,
-      attrs = _ref$attrs === undefined ? {} : _ref$attrs,
-      _ref$styles = _ref.styles,
-      styles = _ref$styles === undefined ? {} : _ref$styles,
-      tagName = _ref.tagName,
-      options = _objectWithoutProperties(_ref, ['attrs', 'styles', 'tagName']);
+  var _ref$node = _ref.node,
+      _ref$node$attrs = _ref$node.attrs,
+      attrs = _ref$node$attrs === undefined ? {} : _ref$node$attrs,
+      _ref$node$styles = _ref$node.styles,
+      styles = _ref$node$styles === undefined ? {} : _ref$node$styles,
+      tagName = _ref$node.tagName,
+      options = _objectWithoutProperties(_ref$node, ['attrs', 'styles', 'tagName']);
 
   var node = asD3.append(tagName);
 
@@ -56,11 +57,11 @@ var appendNodes = function appendNodes(id, _ref2, asD3, selections) {
 
   if (nodes && nodes.length) {
     return nodes.map(function (n, k) {
-      return appendNode(id + '-k', n, wrapper, selections);
+      return appendNode(id + '-k', { node: n }, wrapper, selections);
     });
   }
 
-  return appendNode(id, node, wrapper, selections);
+  return appendNode(id, { node: node }, wrapper, selections);
 };
 
 var updateNode = function updateNode(id, _ref3, asD3, selections) {
@@ -69,8 +70,7 @@ var updateNode = function updateNode(id, _ref3, asD3, selections) {
       attrs = _ref3$node$attrs === undefined ? {} : _ref3$node$attrs,
       _ref3$node$styles = _ref3$node.styles,
       styles = _ref3$node$styles === undefined ? {} : _ref3$node$styles,
-      selector = _ref3.selector,
-      options = _objectWithoutProperties(_ref3, ['node', 'selector']);
+      options = _objectWithoutProperties(_ref3$node, ['attrs', 'styles']);
 
   var selection = selections[id];
 
