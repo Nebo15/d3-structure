@@ -56,6 +56,11 @@ const updateNode = (
     options[prop] && selection[prop] && selection[prop](options[prop])
   );
 
+  if (options.remove) {
+    delete selections[id];
+    return selection;
+  }
+
   Object.keys(attrs).forEach((attr) => selection.attr(attr, attrs[attr]));
   Object.keys(styles).forEach((style) => selection.style(style, styles[style]));
 
