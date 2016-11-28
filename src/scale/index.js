@@ -16,7 +16,8 @@ const scaleProps = [
   'ticks',
   'tickFormat',
   'nice',
-  'copy'
+  'copy',
+  'paddingInner',
 ];
 
 const updateScale = ({ id, ...options }, scales) =>
