@@ -18,7 +18,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var instanceProps = ['html', 'text', 'datum', 'data'];
+var instanceProps = ['html', 'text', 'datum', 'data', 'call'];
 
 var appendNode = function appendNode(id, _ref, asD3, selections) {
   var _ref$attrs = _ref.attrs,

@@ -12,6 +12,7 @@ const instanceProps = [
   'datum',
   'data',
   'call',
+  'remove',
 ];
 
 const appendNode = (
