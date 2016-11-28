@@ -9,10 +9,8 @@ const hookReducer = (val, hooks, { container }) =>
     'function' === typeof hook ? hook(val) : path(hook, container)(val)
   , val);
 
-export const shapeReducer = (shape, prop, options) => {
-  console.log(prop, options[prop] && shape[prop]);
-  return options[prop] && shape[prop] ?
-      typeof options[prop] === 'function' ?
-        shape[prop](options[prop]()) : shape[prop](options[prop])
-      : shape;
-}
+export const shapeReducer = (shape, prop, options) =>
+  options[prop] && shape[prop] ?
+    typeof options[prop] === 'function' ?
+      shape[prop](options[prop]()) : shape[prop](options[prop])
+    : shape;
