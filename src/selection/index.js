@@ -11,6 +11,7 @@ const instanceProps = [
   'text',
   'datum',
   'data',
+  'call',
 ];
 
 const appendNode = (

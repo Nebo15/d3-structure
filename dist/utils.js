@@ -27,6 +27,5 @@ var hookReducer = function hookReducer(val, hooks, _ref) {
 };
 
 var shapeReducer = exports.shapeReducer = function shapeReducer(shape, prop, options) {
-  console.log(prop, options[prop] && shape[prop]);
   return options[prop] && shape[prop] ? typeof options[prop] === 'function' ? shape[prop](options[prop]()) : shape[prop](options[prop]) : shape;
 };
