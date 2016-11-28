@@ -32,16 +32,6 @@ simpleArea.scale('yScale', {
   range: [height, 0],
 });
 
-simpleArea.axis('xAxis', {
-  type: 'bottom',
-  scale: scales['xScale'],
-});
-
-simpleArea.axis('yAxis', {
-  type: 'bottom',
-  scale: scales['yScale'],
-});
-
 simpleArea.svg('simpleAreaGroup', {
   node: {
     tagName: 'g',
@@ -54,8 +44,8 @@ simpleArea.svg('simpleAreaGroup', {
 
 simpleArea.shape('mainArea', {
   type: 'area',
-  y0: height,
   curve: () => curveMonotoneX,
+  y0: height,
   y1: () => d => scales.yScale(d.price),
   x: () => d => scales.xScale(d.date),
 });
@@ -67,28 +57,23 @@ csv('data/simple-area.csv', (d)=> {
   return d;
 }, (error, data) => {
   simpleArea.scale('xScale', {
-    invert: true,
-    nice: true,
     domain: extent(data, (d) => d.date),
   });
 
   simpleArea.scale('yScale', {
-    invert: true,
-    nice: true,
     domain: [0, max(data, (d) => d.price)],
   });
 
   simpleArea.svg('simpleAreaPath', {
     selector: '#simpleAreaGroup',
     node: {
-      datum: data,
       tagName: 'path',
       styles: {
         fill: 'steelblue',
       },
       attrs: {
         id: 'simpleArea',
-        d: areas.mainArea,
+        d: areas.mainArea(data)
       },
     },
   });

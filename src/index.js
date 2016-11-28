@@ -49,15 +49,6 @@ export default (selector, options) => {
     transition(id, options = {}) {
       return transition(merge({ id }, options), container.transitions);
     },
-
-    update(data, options) {
-      return [
-        ['lines', 'arcs', 'pies', 'pies', 'areas'],
-        'axises', 'scales', 'transitions', 'selections'
-      ].reduce(function(data, type) {
-
-      }, data);
-    },
   };
 
   return API;

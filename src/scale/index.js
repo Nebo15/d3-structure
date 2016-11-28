@@ -26,10 +26,16 @@ const updateScale = ({ id, ...options }, scales) =>
   , scales[id]);
 
 const createScale = ({ id, type, ...options }, scales) =>
-  scales[id] = scaleProps.reduce((scale, option) =>
-    options[option] && scale[option] ?
-      scale[option](options[option]) : scale
-  , d3[`scale${camelize(type)}`]());
+  scales[id] = scaleProps.reduce((scale, option) => {
+    const s = options[option] && scale[option] ?
+      scale[option](options[option]) : scale;
+
+    if (s !== scale) {
+      return scale;
+    }
+
+    return s;
+  }, d3[`scale${camelize(type)}`]());
 
 export default cond([
   [({ id }, scales) => has(id, scales), updateScale],

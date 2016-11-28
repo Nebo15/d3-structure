@@ -11,6 +11,9 @@ import { shapeReducer } from '../utils';
 const areaProps = [
   'x',
   'y',
+  'x0',
+  'x1',
+  'y0',
   'y1',
   'defined',
   'curve',
